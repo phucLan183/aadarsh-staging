@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const config = require('./config');
-
+require(dotenv).config();
 
 // Connect Database
 const connectDB = require('./common')
@@ -21,6 +21,6 @@ app.use('/auth', authRouter)
 const indexRouter = require('./routers/index')
 app.use(indexRouter)
 
-app.listen(config.port, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Server started in port: ${config.port}`);
 })
