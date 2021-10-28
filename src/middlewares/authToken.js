@@ -25,18 +25,13 @@ const authenticateRefreshToken = (req, res, next) => {
   })
 }
 
-const authorization = (req, res, next, data) => {
-  const { permission, id } = req.user
-  const userId = req.params.id
-  const isAccessPermission = permission && permission?.[data.module]?.includes(req.method) && userId !== id
-  if (isAccessPermission) {
-    next()
-  } else {
-    res.status(403).json({
-      status: 'false',
-      message: 'You are not allowed to do that'
-    })
-  }
+const authorization = (req, res, next) => {
+  authenticateToken(req, res, () => {
+    if (req.user.permission != undefined) {
+      res.status(403).json("You are not allowed to do that")
+    }
+
+  })
 }
 
 module.exports = {

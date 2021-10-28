@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const typeModelPermission = {
+const sameValue = {
   type: Array,
   default: undefined,
   action: {
@@ -12,15 +12,15 @@ const typeModelPermission = {
 }
 
 const permission = {
-  blog: typeModelPermission,
-  layout: typeModelPermission,
-  product: typeModelPermission,
-  user: typeModelPermission,
-  member: typeModelPermission,
-  contact: typeModelPermission,
-  message: typeModelPermission,
-  question: typeModelPermission,
-  experiment: typeModelPermission
+  blog: sameValue,
+  layout: sameValue,
+  product: sameValue,
+  employee: sameValue,
+  member: sameValue,
+  contact: sameValue,
+  message: sameValue,
+  question: sameValue,
+  experiment: sameValue
 }
 
 const UserSchema = new Schema({
