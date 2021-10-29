@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const sameValue = {
+const typeModelPermission = {
   type: Array,
   default: undefined,
   action: {
@@ -12,21 +12,21 @@ const sameValue = {
 }
 
 const permission = {
-  blog: sameValue,
-  layout: sameValue,
-  product: sameValue,
-  employee: sameValue,
-  member: sameValue,
-  contact: sameValue,
-  message: sameValue,
-  question: sameValue,
-  experiment: sameValue
+  blog: typeModelPermission,
+  layout: typeModelPermission,
+  product: typeModelPermission,
+  user: typeModelPermission,
+  member: typeModelPermission,
+  contact: typeModelPermission,
+  message: typeModelPermission,
+  review: typeModelPermission,
+  experiment: typeModelPermission
 }
 
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
+    required: [true, 'Tên đăng nhập không được để chống!'],
     trim: true,
     unique: true,
     min: 5
@@ -34,17 +34,20 @@ const UserSchema = new Schema({
   email: {
     match: /.+\@.+\..+/,
     type: String,
-    required: true,
+    required: [true, 'Email không được để chống!'],
     unique: true,
     trim: true,
     lowercase: true
   },
   password: {
     type: String,
-    required: true
+    required: [true, 'Mật khẩu không được để chống!'],
   },
   permission,
-  refreshToken: []
+  refreshToken: {
+    type: Array,
+    default: undefined,
+  }
 }, {
   timestamps: true
 });

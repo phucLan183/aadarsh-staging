@@ -1,15 +1,28 @@
 const express = require('express');
 const cors = require('cors');
-const app = express();
+const compression = require('compression');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 const config = require('./config');
 require('dotenv').config();
+const app = express();
 
 // Connect Database
 const connectDB = require('./common')
 connectDB()
 
+// Parse json request body
 app.use(express.json())
+
+// Parse urlencoded request body
 app.use(express.urlencoded({ extended: true }))
+
+// Sanitize request data
+app.use(xss())
+app.use(mongoSanitize())
+
+// gzip compression
+app.use(compression())
 
 // Config CORS
 app.use(cors())
