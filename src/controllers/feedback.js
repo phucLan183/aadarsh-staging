@@ -127,13 +127,13 @@ const deleteFeedback = async (req, res) => {
 
     const updateReview = await ReviewsModel.findOneAndUpdate({
       _id: reviewId,
-      feedbackId: [feedbackId]
+      feedbackId: feedbackId
     }, {
       $pullAll: {
         feedbackId: [feedbackId]
       }
     }).lean()
-
+    console.log(updateReview);
     if (!updateReview) {
       return res.status(404).json({
         status: 'false',
