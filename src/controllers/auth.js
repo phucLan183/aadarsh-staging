@@ -6,13 +6,13 @@ const userRegister = async (req, res) => {
   try {
     const { username, password, email, permission } = req.body
     const hashPassword = await bcrypt.hash(password, 10);
-    const user = new UsersModel({
+    const newUser = new UsersModel({
       username: username,
       email: email,
       password: hashPassword,
       permission: permission,
     })
-    const userData = await user.save()
+    const userData = await newUser.save()
     res.status(200).json({
       status: 'success',
       data: userData

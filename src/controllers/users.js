@@ -2,7 +2,11 @@ const UsersModel = require('../models/Users');
 
 const getAllUsers = async (req, res) => {
   try {
-    const dataUsers = await UsersModel.find().select('username email permission').lean()
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const skipPage = page * pageSize - pageSize
+
+    const dataUsers = await UsersModel.find().select('username email permission').skip(skipPage).limit(pageSize).lean()
     res.status(200).json({
       status: 'success',
       data: dataUsers,
@@ -19,7 +23,15 @@ const getAllUsers = async (req, res) => {
 const getOneUser = async (req, res) => {
   try {
     const userId = req.params.id
-    const dataUser = await UsersModel.findById({ _id: userId }).select('username email permission').lean()
+    const dataUser = await UsersModel.findById(userId).select('username email permission').lean()
+
+    if (!dataUser) {
+      return res.status(404).json({
+        status: 'false',
+        message: 'UserId not found'
+      })
+    }
+
     res.status(200).json({
       status: 'success',
       data: dataUser
@@ -47,6 +59,14 @@ const updateUser = async (req, res) => {
     }, {
       new: true
     }).select('username email permission')
+
+    if (!dataUser) {
+      return res.status(404).json({
+        status: 'false',
+        message: 'UserId not found'
+      })
+    }
+
     res.status(200).json({
       status: 'success',
       data: dataUserUpdate
@@ -62,11 +82,16 @@ const updateUser = async (req, res) => {
 const removeUser = async (req, res) => {
   try {
     const userId = req.params.id
-    const delUser = await UsersModel.deleteOne({ _id: userId }).lean()
+    const delUser = await UsersModel.deleteOne({
+      _id: userId
+    }).lean()
     if (!delUser) {
-      throw new Error('Delete user false')
+      return res.status(404).json({
+        status: 'false',
+        message: 'UserId not found'
+      })
     }
-    res.status(200).json({
+    res.status(204).json({
       status: 'success',
     })
   } catch (error) {

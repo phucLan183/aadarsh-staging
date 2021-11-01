@@ -26,7 +26,7 @@ const permission = {
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: [true, 'Tên đăng nhập không được để chống!'],
+    required: [true, "Tên đăng nhập không được để chống!"],
     trim: true,
     unique: true,
     min: 5
@@ -34,14 +34,14 @@ const UserSchema = new Schema({
   email: {
     match: /.+\@.+\..+/,
     type: String,
-    required: [true, 'Email không được để chống!'],
+    required: [true, "Email không được để chống!"],
     unique: true,
     trim: true,
     lowercase: true
   },
   password: {
     type: String,
-    required: [true, 'Mật khẩu không được để chống!'],
+    required: [true, "Mật khẩu không được để chống!"],
   },
   permission,
   refreshToken: {

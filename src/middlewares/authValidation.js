@@ -7,6 +7,12 @@ const validationUser = (req, res, next) => {
   })
 }
 
+const validationReview = (req, res, next) => {
+  authorization(req, res, next, {
+    module: permissionModules.review
+  })
+}
 module.exports = {
-  validationUser
+  validationUser,
+  validationReview
 }
