@@ -22,7 +22,7 @@ router.delete('/review/:reviewId', authenticateToken, validationReview, reviewsC
 // Feedback
 router.get('/getAllFeedback', authenticateToken, validationReview, feedbackController.getAllFeedback)
 router.post('/review/:reviewId/feedback', authenticateToken, validationReview, feedbackController.createFeedback)
-router.get('review/:reviewId/feedback/:feedbackId', authenticateToken, validationReview, feedbackController.getOneFeedback)
+router.get('/review/:reviewId/feedback/:feedbackId', authenticateToken, validationReview, feedbackController.getOneFeedback)
 router.put('/review/:reviewId/feedback/:feedbackId', authenticateToken, validationReview, feedbackController.updateFeedback)
 router.delete('/review/:reviewId/feedback/:feedbackId', authenticateToken, validationReview, feedbackController.deleteFeedback)
 
