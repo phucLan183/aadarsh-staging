@@ -1,11 +1,11 @@
 const UsersModel = require('../models/Users');
+const bcrypt = require('bcrypt');
 
 const getAllUsers = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
-
     const dataUsers = await UsersModel.find().select('username email permission').skip(skipPage).limit(pageSize).lean()
     res.status(200).json({
       status: 'success',
@@ -44,6 +44,29 @@ const getOneUser = async (req, res) => {
   }
 }
 
+const createUser = async (req, res) => {
+  try {
+    const { username, email, password, permission } = req.body
+    const hashPassword = await bcrypt.hash(password, 10)
+    const newUser = new UsersModel({
+      username: username,
+      email: email,
+      password: hashPassword,
+      permission: permission
+    })
+    const userData = await newUser.save()
+    res.status(200).json({
+      status: 'success',
+      data: userData
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
+
 const updateUser = async (req, res) => {
   try {
     const userId = req.params.id
@@ -60,7 +83,7 @@ const updateUser = async (req, res) => {
       new: true
     }).select('username email permission')
 
-    if (!dataUser) {
+    if (!dataUserUpdate) {
       return res.status(404).json({
         status: 'false',
         message: 'UserId not found'
@@ -91,7 +114,7 @@ const removeUser = async (req, res) => {
         message: 'UserId not found'
       })
     }
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
     })
   } catch (error) {
@@ -103,6 +126,7 @@ const removeUser = async (req, res) => {
 }
 module.exports = {
   getAllUsers: getAllUsers,
+  createUser: createUser,
   getOneUser: getOneUser,
   updateUser: updateUser,
   removeUser: removeUser

@@ -19,6 +19,7 @@ const permission = {
   member: typeModelPermission,
   contact: typeModelPermission,
   message: typeModelPermission,
+  question: typeModelPermission,
   review: typeModelPermission,
   experiment: typeModelPermission
 }

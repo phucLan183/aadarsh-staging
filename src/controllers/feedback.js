@@ -3,7 +3,14 @@ const ReviewsModel = require('../models/Reviews');
 
 const getAllFeedback = async (req, res) => {
   try {
-    const dataFeedback = await FeedbackModel.find().select('fullname star content createdAt').lean()
+    const reviewId = req.params.reviewId
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const skipPage = page * pageSize - pageSize
+
+    const dataFeedback = await FeedbackModel.find({
+      reviewId: reviewId
+    }).select('fullname star content createdAt').skip(skipPage).limit(pageSize).lean()
 
     res.status(200).json({
       status: 'success',
@@ -54,6 +61,7 @@ const createFeedback = async (req, res) => {
       fullname: fullname,
       star: star,
       content: content,
+      reviewId: reviewId,
     })
 
     const updateReview = await ReviewsModel.findByIdAndUpdate({
@@ -133,7 +141,7 @@ const deleteFeedback = async (req, res) => {
         feedbackId: [feedbackId]
       }
     }).lean()
-    console.log(updateReview);
+
     if (!updateReview) {
       return res.status(404).json({
         status: 'false',
@@ -145,7 +153,7 @@ const deleteFeedback = async (req, res) => {
       _id: feedbackId
     }).lean()
 
-    res.status(204).json({
+    res.status(200).json({
       status: 'success'
     })
   } catch (error) {

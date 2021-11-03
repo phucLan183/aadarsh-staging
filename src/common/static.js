@@ -6,6 +6,7 @@ const permissionModules = {
   member: 'member',
   contact: 'contact',
   message: 'message',
+  question: 'question',
   review: 'review',
   experiment: 'experiment'
 }

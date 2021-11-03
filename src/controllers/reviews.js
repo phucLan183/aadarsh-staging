@@ -5,7 +5,6 @@ const getAllReviews = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
-
     const dataReviews = await ReviewsModel.find().select('name createdAt').skip(skipPage).limit(pageSize).lean()
     res.status(200).json({
       status: 'success',
@@ -25,10 +24,7 @@ const getOneReview = async (req, res) => {
     const reviewId = req.params.reviewId
     const dataReview = await ReviewsModel.findById({
       _id: reviewId
-    }).populate({
-      path: "feedbackId",
-      select: "-updatedAt -__v"
-    }).select('name feedbackId createdAt')
+    }).select('name createdAt')
 
     if (!dataReview) {
       return res.status(404).json({
@@ -77,7 +73,7 @@ const createReview = async (req, res) => {
 const updateReview = async (req, res) => {
   try {
     const reviewId = req.params.reviewId
-    const { name } = req.body
+    const name = req.body.name
     const dataReview = await ReviewsModel.findByIdAndUpdate({
       _id: reviewId,
     }, {
@@ -114,7 +110,7 @@ const deleteReview = async (req, res) => {
         message: 'ReviewId not found'
       })
     }
-    res.status(204).json({
+    res.status(200).json({
       status: 'success'
     })
   } catch (error) {

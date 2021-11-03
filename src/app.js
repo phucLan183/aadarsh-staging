@@ -27,11 +27,11 @@ app.use(compression())
 // Config CORS
 app.use(cors())
 
-// Import Routers
-const authRouter = require('./routers/auth')
-app.use('/auth', authRouter)
+// // Import Routers
+// const authRouter = require('./routers/auth')
+// app.use('/auth', authRouter)
 
-const indexRouter = require('./routers/index')
+const indexRouter = require('./routers')
 app.use(indexRouter)
 
 app.listen(process.env.PORT, () => {

@@ -14,6 +14,10 @@ const FeedbackSchema = new Schema({
   content: {
     type: String,
     required: true,
+  },
+  reviewId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Review'
   }
 }, {
   timestamps: true
