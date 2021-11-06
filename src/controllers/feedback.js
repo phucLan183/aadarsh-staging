@@ -11,11 +11,11 @@ const getAllFeedback = async (req, res) => {
     const dataFeedback = await FeedbackModel.find({
       reviewId: reviewId
     }).select('fullname star content createdAt').skip(skipPage).limit(pageSize).lean()
-
+    const totalFeedback = await FeedbackModel.countDocuments()
     res.status(200).json({
       status: 'success',
       data: dataFeedback,
-      total: dataFeedback.length,
+      total: totalFeedback,
     })
   } catch (error) {
     res.status(500).json({

@@ -6,10 +6,11 @@ const getAllQuestions = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
     const dataQuestion = await QuestionsModel.find().select('title content createdAt').skip(skipPage).limit(pageSize).lean()
+    const totalQuestion = await QuestionModel.countDocuments()
     res.status(200).json({
       status: 'success',
       data: dataQuestion,
-      total: dataQuestion.length
+      total: totalQuestion
     })
   } catch (error) {
     res.status(500).json({

@@ -6,10 +6,11 @@ const getAllReviews = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
     const dataReviews = await ReviewsModel.find().select('name createdAt').skip(skipPage).limit(pageSize).lean()
+    const totalReview = await ReviewsModel.countDocuments()
     res.status(200).json({
       status: 'success',
       data: dataReviews,
-      total: dataReviews.length,
+      total: totalReview,
     })
   } catch (error) {
     res.status(500).json({

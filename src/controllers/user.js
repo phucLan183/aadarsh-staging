@@ -7,10 +7,11 @@ const getAllUsers = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
     const dataUsers = await UsersModel.find().select('username email permission').skip(skipPage).limit(pageSize).lean()
+    const totalUser = await UsersModel.countDocuments()
     res.status(200).json({
       status: 'success',
       data: dataUsers,
-      total: dataUsers.length,
+      total: totalUser,
     })
   } catch (error) {
     res.status(500).json({
