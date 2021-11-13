@@ -27,22 +27,27 @@ const permission = {
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: [true, "Tên đăng nhập không được để chống!"],
+    required: true,
     trim: true,
     unique: true,
     min: 5
   },
+  fullname: {
+    type: String,
+    trim: true,
+    required: true
+  },
   email: {
     match: /.+\@.+\..+/,
     type: String,
-    required: [true, "Email không được để chống!"],
+    required: true,
     unique: true,
     trim: true,
     lowercase: true
   },
   password: {
     type: String,
-    required: [true, "Mật khẩu không được để chống!"],
+    required: true,
   },
   permission,
   refreshToken: {

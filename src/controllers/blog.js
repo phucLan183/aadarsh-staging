@@ -36,7 +36,7 @@ const getOneBlog = async (req, res) => {
       path: 'tagId'
     }).select('title description content createdAt').lean()
     if (!dataBlog) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy bài viết'
       })
@@ -99,7 +99,7 @@ const updateBlog = async (req, res) => {
     }).select('title description content createdAt')
 
     if (!dataBlog) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy bài viết'
       })
@@ -124,7 +124,7 @@ const deleteBlog = async (req, res) => {
       _id: blogId
     }).lean()
     if (!dataBlog) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy bài viết'
       })

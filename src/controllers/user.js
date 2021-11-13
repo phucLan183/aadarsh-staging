@@ -27,7 +27,7 @@ const getOneUser = async (req, res) => {
     const dataUser = await UsersModel.findById(userId).select('username email permission').lean()
 
     if (!dataUser) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'UserId not found'
       })
@@ -85,7 +85,7 @@ const updateUser = async (req, res) => {
     }).select('username email permission')
 
     if (!dataUserUpdate) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'UserId not found'
       })
@@ -110,7 +110,7 @@ const removeUser = async (req, res) => {
       _id: userId
     }).lean()
     if (!delUser) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'UserId not found'
       })

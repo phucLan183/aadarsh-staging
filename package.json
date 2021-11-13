@@ -19,7 +19,9 @@
     "express-mongo-sanitize": "^2.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
-    "xss-clean": "^0.1.1"
+    "nodemailer": "^6.7.0",
+    "xss-clean": "^0.1.1",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.14"

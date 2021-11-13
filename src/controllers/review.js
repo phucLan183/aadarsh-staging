@@ -28,7 +28,7 @@ const getOneReview = async (req, res) => {
     }).select('name createdAt')
 
     if (!dataReview) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'ReviewId not found'
       })
@@ -84,7 +84,7 @@ const updateReview = async (req, res) => {
     }).select('name createdAt')
 
     if (!dataReview) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'ReviewId not found'
       })
@@ -106,7 +106,7 @@ const deleteReview = async (req, res) => {
     const reviewId = req.params.reviewId
     const dataReview = await ReviewsModel.findByIdAndDelete(reviewId)
     if (!dataReview) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'ReviewId not found'
       })

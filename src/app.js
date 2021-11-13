@@ -28,8 +28,6 @@ app.use(compression())
 app.use(cors())
 
 // // Import Routers
-// const authRouter = require('./routers/auth')
-// app.use('/auth', authRouter)
 
 const indexRouter = require('./routers')
 app.use(indexRouter)

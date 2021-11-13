@@ -25,7 +25,7 @@ const getOneQuestion = async (req, res) => {
     const questionId = req.params.id
     const dataQuestion = await QuestionsModel.findById(questionId).select('title content createdAt').lean()
     if (!dataQuestion) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy câu hỏi'
       })
@@ -82,7 +82,7 @@ const updateQuestion = async (req, res) => {
       new: true
     }).select('title content createdAt')
     if (!dataQuestion) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy câu hỏi'
       })
@@ -106,7 +106,7 @@ const deleteQuestion = async (req, res) => {
       _id: questionId
     })
     if (!dataQuestion) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy câu hỏi'
       })

@@ -34,7 +34,7 @@ const getOneFeedback = async (req, res) => {
     }).select('fullname star content createdAt')
 
     if (!dataFeedback) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'FeedbackId not found'
       })
@@ -73,7 +73,7 @@ const createFeedback = async (req, res) => {
     })
 
     if (!updateReview) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'ReviewId not found'
       })
@@ -111,7 +111,7 @@ const updateFeedback = async (req, res) => {
     })
 
     if (!dataFeedback) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'FeedbackId not found'
       })
@@ -143,7 +143,7 @@ const deleteFeedback = async (req, res) => {
     }).lean()
 
     if (!updateReview) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
         message: 'ID not found'
       })

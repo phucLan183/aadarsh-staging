@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const FeedbackSchema = new Schema({
   fullname: {
     type: String,
-    required: [true, "Tên không được để chống!"]
+    required: true
   },
   star: {
     type: Number,

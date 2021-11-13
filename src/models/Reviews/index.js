@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ReviewSchema = new Schema({
   name: {
     type: String,
-    required: [true, "Tên không được để chống!"]
+    required: true
   },
   productId: [{
     type: mongoose.Schema.Types.ObjectId,

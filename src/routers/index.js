@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const userRoute = require('./v1/user');
-const reviewRoute = require('./v1/review');
-const feedbackRoute = require('./v1/feedback');
-const authRoute = require('./v1/auth');
-const questionRoute = require('./v1/question');
-const blog = require('./v1/blog');
-const tags = require('./v1/tag');
+const userRoute = require('./server/user');
+const reviewRoute = require('./server/review');
+const feedbackRoute = require('./server/feedback');
+const authRoute = require('./server/auth');
+const questionRoute = require('./server/question');
+const blogRoute = require('./server/blog');
+const tagRoute = require('./server/tag');
+
+const contactRoute = require('./client/contact');
 
 const defaultRoutes = [
   authRoute,
@@ -14,8 +16,9 @@ const defaultRoutes = [
   reviewRoute,
   feedbackRoute,
   questionRoute,
-  blog,
-  tags
+  blogRoute,
+  tagRoute,
+  contactRoute
 ]
 
 defaultRoutes.forEach((route) => {

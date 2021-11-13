@@ -4,14 +4,37 @@ const jwt = require('jsonwebtoken');
 
 const userRegister = async (req, res) => {
   try {
-    const { username, password, email } = req.body
+    const { username, password, email, fullname } = req.body
+
+    const checkUsername = await UsersModel.findOne({ username: username }).select('username').lean()
+    if (checkUsername) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tên đăng nhập đã được sử dụng!'
+      })
+    }
+
+    const checkEmail = await UsersModel.findOne({ email: email }).select('email').lean()
+    if (checkEmail) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Email đã được sử dụng!'
+      })
+    }
+
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = new UsersModel({
+    const newUser = await UsersModel.create({
       username: username,
+      fullname: fullname,
       email: email,
       password: hashPassword
     })
-    const userData = await newUser.save()
+    const userData = {
+      _id: newUser._id,
+      username: newUser.username,
+      fullname: newUser.fullname,
+      email: newUser.email
+    }
     res.status(200).json({
       status: 'success',
       data: userData
@@ -32,16 +55,16 @@ const userLogin = async (req, res) => {
     } = req.body
     const checkDataUser = await UsersModel.findOne({ username: username }).lean()
     if (!checkDataUser) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
-        message: 'Username or password incorrect',
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
       })
     }
     const comparePass = await bcrypt.compare(password, checkDataUser.password)
     if (!comparePass) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: 'false',
-        message: 'Username or password incorrect',
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
       })
     }
     const accessToken = jwt.sign({
@@ -143,7 +166,7 @@ const refreshToken = async (req, res) => {
     })
 
     res.status(200).json({
-      success: "success",
+      status: "success",
       act: accessToken,
     })
   } catch (error) {
