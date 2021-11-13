@@ -125,10 +125,28 @@ const removeUser = async (req, res) => {
     })
   }
 }
+
+const getCurrentUser = async (req, res) => {
+  try {
+    const dataCurrentUser = req.user.id
+    const userInData = await UsersModel.findById(dataCurrentUser).select('username email permission').lean()
+    res.status(200).json({
+      status: 'success',
+      data: userInData
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
+
 module.exports = {
   getAllUsers: getAllUsers,
   createUser: createUser,
   getOneUser: getOneUser,
   updateUser: updateUser,
-  removeUser: removeUser
+  removeUser: removeUser,
+  getCurrentUser: getCurrentUser
 }

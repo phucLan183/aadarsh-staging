@@ -11,4 +11,5 @@ router.get('/user/:id', authenticateToken, validationUser, userController.getOne
 router.put('/user/:id', authenticateToken, validationUser, userController.updateUser)
 router.delete('/user/:id', authenticateToken, validationUser, userController.removeUser)
 
+router.get('/current-user', authenticateToken, validationUser, userController.getCurrentUser)
 module.exports = router
