@@ -1,7 +1,7 @@
 const UsersModel = require('../models/Users');
 const bcrypt = require('bcrypt');
 
-const filterDataUser = 'username email fullname permission'
+const filterDataUser = '-refreshToken -createdAt -updatedAt -__v -password'
 
 const getAllUsers = async (req, res) => {
   try {
@@ -79,6 +79,14 @@ const updateUser = async (req, res) => {
   try {
     const userId = req.params.id
     const body = req.body
+    const checkPassword = body.newPassword !== body.confirmPassword
+    if (checkPassword) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Mật khẩu không trùng khớp!'
+      })
+    }
+    if (body.confirmPassword) var hashPassword = await bcrypt.hash(body.confirmPassword, 10)
     const dataUserUpdate = await UsersModel.findByIdAndUpdate({
       _id: userId
     }, {
@@ -86,9 +94,14 @@ const updateUser = async (req, res) => {
         username: body.username,
         email: body.email,
         permission: body.permission,
-        fullname: body.fullname
+        fullname: body.fullname,
+        phoneNumber: body.phoneNumber,
+        active: body.active,
+        avatar: body.avatar,
+        password: hashPassword
       }
     }, {
+      multi: true,
       new: true
     }).select(filterDataUser)
 

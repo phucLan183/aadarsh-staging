@@ -45,9 +45,20 @@ const UserSchema = new Schema({
     trim: true,
     lowercase: true
   },
+  phoneNumber: {
+    type: String,
+    trim: true,
+  },
+  avatar: {
+    type: String,
+  },
   password: {
     type: String,
     required: true,
+  },
+  active: {
+    type: Boolean,
+    default: true
   },
   permission,
   refreshToken: {

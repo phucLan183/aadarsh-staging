@@ -67,16 +67,16 @@ const userLogin = async (req, res) => {
       })
     }
     const accessToken = jwt.sign({
-      id: checkDataUser._id,
-      username: checkDataUser.username,
+      userId: checkDataUser._id,
+      active: checkDataUser.active,
       permission: checkDataUser.permission,
     }, config.accessToken, {
       expiresIn: '30m'
     })
 
     const refreshToken = jwt.sign({
-      id: checkDataUser._id,
-      username: checkDataUser.username,
+      userId: checkDataUser._id,
+      active: checkDataUser.active
     }, config.refreshToken, {
       expiresIn: '7d'
     })
@@ -108,7 +108,7 @@ const userLogin = async (req, res) => {
 const userLogout = async (req, res) => {
   try {
     await UsersModel.updateOne({
-      username: req.user.username
+      _id: req.user.id
     }, {
       $set: {
         refreshToken: []
@@ -126,7 +126,7 @@ const userLogout = async (req, res) => {
 }
 
 const accessToken = async (req, res) => {
-  if (req.user.id) {
+  if (req.user.userId) {
     res.json({
       status: 'success'
     })
@@ -139,27 +139,24 @@ const accessToken = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const user = {
-      username: req.user.username,
-      refreshToken: req.user.refreshToken
-    }
-    if (user.refreshToken === null) {
+    const { userId, refreshToken } = req.user
+    if (refreshToken === null) {
       return res.sendStatus(401)
     }
     const dataUser = await UsersModel.findOne({
-      username: user.username
-    }).select('username permission refreshToken').lean()
+      _id: userId
+    }).select('active permission refreshToken').lean()
 
     const storageRefreshToken = dataUser.refreshToken
 
-    if (!storageRefreshToken.includes(user.refreshToken)) {
+    if (!storageRefreshToken.includes(refreshToken)) {
       return res.sendStatus(401)
     }
 
     const accessToken = jwt.sign({
-      id: dataUser._id,
-      username: dataUser.username,
-      permission: dataUser.permission,
+      userId: dataUser._id,
+      active: dataUser.active,
+      permission: dataUser.permission
     }, config.accessToken, {
       expiresIn: "30m"
     })
