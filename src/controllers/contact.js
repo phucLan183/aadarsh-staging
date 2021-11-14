@@ -4,9 +4,8 @@ module.exports = async (req, res) => {
   try {
     const body = req.body
     const dataContact = {
-      from: body.email,
       to: "mailblogmyself@gmail.com",
-      subject: "Test Mail",
+      subject: "Thư liên hệ của khách hàng",
       html: `<h3>Test send a mail</h3>
                     <div>
                         <p>

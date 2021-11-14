@@ -1,10 +1,12 @@
 const UsersModel = require('../models/Users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const transporter = require('../common/transporter');
+const config = require('../config');
 
 const userRegister = async (req, res) => {
   try {
-    const { username, password, email, fullname } = req.body
+    const { username, password, email } = req.body
 
     const checkUsername = await UsersModel.findOne({ username: username }).select('username').lean()
     if (checkUsername) {
@@ -25,7 +27,7 @@ const userRegister = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await UsersModel.create({
       username: username,
-      fullname: fullname,
+      fullname: username,
       email: email,
       password: hashPassword
     })
@@ -49,10 +51,7 @@ const userRegister = async (req, res) => {
 
 const userLogin = async (req, res) => {
   try {
-    const {
-      username,
-      password
-    } = req.body
+    const { username, password } = req.body
     const checkDataUser = await UsersModel.findOne({ username: username }).lean()
     if (!checkDataUser) {
       return res.status(400).json({
@@ -71,14 +70,14 @@ const userLogin = async (req, res) => {
       id: checkDataUser._id,
       username: checkDataUser.username,
       permission: checkDataUser.permission,
-    }, process.env.ACCESS_TOKEN, {
+    }, config.accessToken, {
       expiresIn: '30m'
     })
 
     const refreshToken = jwt.sign({
       id: checkDataUser._id,
       username: checkDataUser.username,
-    }, process.env.REFRESH_TOKEN, {
+    }, config.refreshToken, {
       expiresIn: '7d'
     })
 
@@ -90,7 +89,7 @@ const userLogin = async (req, res) => {
       }
     }, {
       new: true
-    }).select('username email permission')
+    }).select('username email permission fullname')
 
     return res.json({
       status: 'success',
@@ -144,7 +143,7 @@ const refreshToken = async (req, res) => {
       username: req.user.username,
       refreshToken: req.user.refreshToken
     }
-    if (user.refreshToken == null) {
+    if (user.refreshToken === null) {
       return res.sendStatus(401)
     }
     const dataUser = await UsersModel.findOne({
@@ -154,14 +153,14 @@ const refreshToken = async (req, res) => {
     const storageRefreshToken = dataUser.refreshToken
 
     if (!storageRefreshToken.includes(user.refreshToken)) {
-      return res.sendStatus(403)
+      return res.sendStatus(401)
     }
 
     const accessToken = jwt.sign({
       id: dataUser._id,
       username: dataUser.username,
       permission: dataUser.permission,
-    }, process.env.ACCESS_TOKEN, {
+    }, config.accessToken, {
       expiresIn: "30m"
     })
 
@@ -177,6 +176,81 @@ const refreshToken = async (req, res) => {
   }
 }
 
+const forgotPassword = async (req, res) => {
+  try {
+    const email = req.body.email
+    const checkDataUser = await UsersModel.findOne({ email: email }).select('email').lean()
+    if (!checkDataUser || checkDataUser === null) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Email không tồn tại'
+      })
+    }
+
+    const resetToken = jwt.sign({
+      id: checkDataUser._id,
+    }, config.resetPassword, {
+      expiresIn: "3m"
+    })
+
+    const message = {
+      to: email,
+      subject: "Thay đổi mật khẩu",
+      html: `<h3>CLICK A LINK TO RESET PASSWORD</h3>
+             <a href="https://aadarsh-staging.netlify.app/reset-password/${resetToken}">GET OVER HERE</a><br/>`
+    }
+    const sendMail = await transporter.sendMail(message)
+    if (!sendMail) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Can not send mail'
+      })
+    }
+    res.status(200).json({
+      status: 'success'
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
+
+const resetPassword = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const { newPassword, confirmPassword } = req.body
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Mật khẩu không trùng khớp!'
+      })
+    }
+    const hashPassword = await bcrypt.hash(confirmPassword, 10)
+    const checkDataUser = await UsersModel.findByIdAndUpdate({
+      _id: userId
+    }, {
+      $set: {
+        password: hashPassword
+      }
+    })
+    if (!checkDataUser) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Không tìm thấy tài khoản này!'
+      })
+    }
+    res.status(200).json({
+      status: 'success'
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
 
 module.exports = {
   userRegister: userRegister,
@@ -184,4 +258,6 @@ module.exports = {
   userLogout: userLogout,
   accessToken: accessToken,
   refreshToken: refreshToken,
+  forgotPassword: forgotPassword,
+  resetPassword: resetPassword,
 }

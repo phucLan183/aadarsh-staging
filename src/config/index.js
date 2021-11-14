@@ -10,4 +10,5 @@ module.exports = {
   databaseURL: process.env.DATABASE_URL,
   accessToken: process.env.ACCESS_TOKEN,
   refreshToken: process.env.REFRESH_TOKEN,
+  resetToken: process.env.RESET_TOKEN
 }
