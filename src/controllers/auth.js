@@ -53,7 +53,8 @@ const userLogin = async (req, res) => {
   try {
     const { username, password } = req.body
     const checkDataUser = await UsersModel.findOne({ username: username }).lean()
-    if (!checkDataUser) {
+    console.log(checkDataUser)
+    if (!checkDataUser || checkDataUser.active === false) {
       return res.status(400).json({
         status: 'false',
         message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
