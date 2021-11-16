@@ -53,7 +53,7 @@ const userLogin = async (req, res) => {
   try {
     const { username, password } = req.body
     const checkDataUser = await UsersModel.findOne({ username: username }).lean()
-    console.log(checkDataUser)
+
     if (!checkDataUser || checkDataUser.active === false) {
       return res.status(400).json({
         status: 'false',
@@ -196,7 +196,7 @@ const forgotPassword = async (req, res) => {
 
     const resetToken = jwt.sign({
       id: checkDataUser._id,
-    }, config.resetPassword, {
+    }, config.resetToken, {
       expiresIn: "3m"
     })
 
