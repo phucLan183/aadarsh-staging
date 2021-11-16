@@ -131,9 +131,9 @@ const removeUser = async (req, res) => {
     const userId = req.params.id
     const userIdToken = req.user.userId
     if (userIdToken === userId) {
-      return res.status(400).json({
+      return res.status(403).json({
         status: 'false',
-        message: 'Tài khoản không có quyền!'
+        message: 'Không thể tự xóa tài khoản!'
       })
     }
     const delUser = await UsersModel.deleteOne({
