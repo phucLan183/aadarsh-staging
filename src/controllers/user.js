@@ -8,7 +8,7 @@ const getAllUsers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
-    const userId = req.user.id
+    const userId = req.user.userId
     const dataUsers = await UsersModel.find({
       _id: {
         $nin: userId
@@ -54,15 +54,22 @@ const getOneUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { username, email, password, permission } = req.body
-    const hashPassword = await bcrypt.hash(password, 10)
-    const newUser = new UsersModel({
-      username: username,
-      email: email,
+    const body = req.body
+    const hashPassword = await bcrypt.hash(body.password, 10)
+    const newUser = await UsersModel.create({
+      username: body.username,
+      email: body.email,
+      fullname: body.fullname,
       password: hashPassword,
-      permission: permission
+      permission: body.permission,
     })
-    const userData = await newUser.save()
+    const userData = {
+      _id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      fullname: newUser.fullname,
+      permission: newUser.permission,
+    }
     res.status(200).json({
       status: 'success',
       data: userData
@@ -108,7 +115,7 @@ const updateUser = async (req, res) => {
     if (!dataUserUpdate) {
       return res.status(400).json({
         status: 'false',
-        message: 'UserId not found'
+        message: 'Không tìm thấy dữ liệu!'
       })
     }
 
@@ -133,7 +140,7 @@ const removeUser = async (req, res) => {
     if (!delUser) {
       return res.status(400).json({
         status: 'false',
-        message: 'UserId not found'
+        message: 'Không tìm thấy dữ liệu!'
       })
     }
     res.status(200).json({
@@ -149,11 +156,11 @@ const removeUser = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
   try {
-    const dataCurrentUser = req.user.id
-    const userInData = await UsersModel.findById(dataCurrentUser).select(filterDataUser).lean()
+    const currentUserId = req.user.userId
+    const dataUser = await UsersModel.findById(currentUserId).select(filterDataUser).lean()
     res.status(200).json({
       status: 'success',
-      data: userInData
+      data: dataUser
     })
   } catch (error) {
     res.status(500).json({

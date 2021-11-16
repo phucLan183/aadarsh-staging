@@ -29,14 +29,13 @@ const authenticateRefreshToken = (req, res, next) => {
 const authorization = (req, res, next, data) => {
   const { permission } = req.user
   const isAccessPermission = permission && permission?.[data.module]?.includes(req.method)
-  if (isAccessPermission) {
-    next()
-  } else {
+  if (!isAccessPermission) {
     res.status(403).json({
       status: 'false',
       message: 'Tài khoản không có quyền!'
     })
   }
+  next()
 }
 
 const authenticateResetToken = (req, res, next) => {

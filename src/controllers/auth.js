@@ -108,7 +108,7 @@ const userLogin = async (req, res) => {
 const userLogout = async (req, res) => {
   try {
     await UsersModel.updateOne({
-      _id: req.user.id
+      _id: req.user.userId
     }, {
       $set: {
         refreshToken: []
@@ -216,7 +216,7 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const userId = req.user.id
+    const userId = req.user.userId
     const { newPassword, confirmPassword } = req.body
     if (newPassword !== confirmPassword) {
       return res.status(400).json({
