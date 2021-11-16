@@ -110,13 +110,19 @@ const userLogout = async (req, res) => {
     const authHeader = req.headers['x-token']
     const token = authHeader && authHeader.split(' ')[1]
     const decode = jwt.decode(token)
-    await UsersModel.updateOne({
+    const dataUser = await UsersModel.findByIdAndUpdate({
       _id: decode.userId
     }, {
       $set: {
         refreshToken: []
       }
     })
+    if (!dataUser) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Không tìm thấy dữ liệu!'
+      })
+    }
     res.status(200).json({
       success: "success",
     })

@@ -62,6 +62,8 @@ const createUser = async (req, res) => {
       fullname: body.fullname,
       password: hashPassword,
       permission: body.permission,
+      phoneNumber: body.phoneNumber,
+      avatar: body.avatar
     })
     const userData = {
       _id: newUser._id,
@@ -69,6 +71,8 @@ const createUser = async (req, res) => {
       email: newUser.email,
       fullname: newUser.fullname,
       permission: newUser.permission,
+      phoneNumber: newUser.phoneNumber,
+      avatar: newUser.avatar
     }
     res.status(200).json({
       status: 'success',
@@ -134,6 +138,13 @@ const updateUser = async (req, res) => {
 const removeUser = async (req, res) => {
   try {
     const userId = req.params.id
+    const userIdToken = req.user.userId
+    if (userIdToken === userId) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tài khoản không có quyền!'
+      })
+    }
     const delUser = await UsersModel.deleteOne({
       _id: userId
     }).lean()

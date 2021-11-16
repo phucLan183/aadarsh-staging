@@ -8,7 +8,7 @@ const permissionModules = {
   message: 'message',
   question: 'question',
   review: 'review',
-  experiment: 'experiment'
+  order: 'order'
 }
 
 module.exports = {
