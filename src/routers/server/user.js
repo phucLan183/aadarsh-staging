@@ -5,7 +5,7 @@ const { validationUser } = require('../../middlewares/authValidation');
 const userController = require('../../controllers/user');
 
 // User
-router.get('/current-user', authenticateToken, validationUser, userController.getCurrentUser)
+router.get('/current-user', authenticateToken, userController.getCurrentUser)
 router.get('/users', authenticateToken, validationUser, userController.getAllUsers)
 router.post('/users', authenticateToken, validationUser, userController.createUser)
 router.get('/user/:id', authenticateToken, validationUser, userController.getOneUser)

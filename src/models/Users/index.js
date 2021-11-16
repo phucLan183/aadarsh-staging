@@ -58,7 +58,7 @@ const UserSchema = new Schema({
   },
   active: {
     type: Boolean,
-    default: true
+    default: false
   },
   permission,
   refreshToken: {

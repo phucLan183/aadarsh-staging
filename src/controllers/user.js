@@ -63,20 +63,11 @@ const createUser = async (req, res) => {
       password: hashPassword,
       permission: body.permission,
       phoneNumber: body.phoneNumber,
-      avatar: body.avatar
+      avatar: body.avatar,
+      active: body.active
     })
-    const userData = {
-      _id: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
-      fullname: newUser.fullname,
-      permission: newUser.permission,
-      phoneNumber: newUser.phoneNumber,
-      avatar: newUser.avatar
-    }
     res.status(200).json({
-      status: 'success',
-      data: userData
+      status: 'success'
     })
   } catch (error) {
     res.status(500).json({
