@@ -36,7 +36,7 @@ const getOneUser = async (req, res) => {
     if (!dataUser) {
       return res.status(400).json({
         status: 'false',
-        message: 'UserId not found'
+        message: 'Không tìm thấy dữ liệu!'
       })
     }
 

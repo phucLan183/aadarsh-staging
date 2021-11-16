@@ -107,8 +107,11 @@ const userLogin = async (req, res) => {
 
 const userLogout = async (req, res) => {
   try {
+    const authHeader = req.headers['x-token']
+    const token = authHeader && authHeader.split(' ')[1]
+    const decode = jwt.decode(token)
     await UsersModel.updateOne({
-      _id: req.user.userId
+      _id: decode.userId
     }, {
       $set: {
         refreshToken: []
