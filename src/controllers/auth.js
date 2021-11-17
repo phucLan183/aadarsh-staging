@@ -195,7 +195,7 @@ const forgotPassword = async (req, res) => {
     }
 
     const resetToken = jwt.sign({
-      id: checkDataUser._id,
+      userId: checkDataUser._id,
     }, config.resetToken, {
       expiresIn: "3m"
     })

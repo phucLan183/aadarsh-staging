@@ -9,7 +9,7 @@ const getAllUsers = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
     const userId = req.user.userId
-    const keyWord = req.query.keyWord
+    const keyWord = req.query.keyWord || ''
     const dataUsers = await UsersModel.find({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },
