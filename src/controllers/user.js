@@ -9,12 +9,29 @@ const getAllUsers = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
     const userId = req.user.userId
+    const keyWord = req.query.keyWord
     const dataUsers = await UsersModel.find({
+      $or: [
+        { fullname: { $regex: keyWord, $options: 'i' } },
+        { username: { $regex: keyWord, $options: 'i' } },
+        { email: { $regex: keyWord, $options: 'i' } },
+        { phoneNumber: { $regex: keyWord, $options: 'i' } }
+      ],
       _id: {
         $nin: userId
       }
     }).select(filterDataUser).skip(skipPage).limit(pageSize).lean()
-    const totalUser = await UsersModel.countDocuments()
+    const totalUser = await UsersModel.countDocuments({
+      $or: [
+        { fullname: { $regex: keyWord, $options: 'i' } },
+        { username: { $regex: keyWord, $options: 'i' } },
+        { email: { $regex: keyWord, $options: 'i' } },
+        { phoneNumber: { $regex: keyWord, $options: 'i' } }
+      ],
+      _id: {
+        $nin: userId
+      }
+    })
     res.status(200).json({
       status: 'success',
       data: dataUsers,

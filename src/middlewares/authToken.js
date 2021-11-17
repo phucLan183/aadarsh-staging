@@ -6,7 +6,7 @@ const authenticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1]
   if (!token) return res.sendStatus(401)
   jwt.verify(token, config.accessToken, (err, user) => {
-    if (err || user.active === false) return res.sendStatus(403)
+    if (err || user.active === false) return res.sendStatus(401)
     req.user = user
     next()
   })
@@ -17,7 +17,7 @@ const authenticateRefreshToken = (req, res, next) => {
   const refreshToken = authHeader && authHeader.split(' ')[1]
   if (!refreshToken) return res.sendStatus(401)
   jwt.verify(refreshToken, config.refreshToken, (err, user) => {
-    if (err || user.active === false) return res.sendStatus(403)
+    if (err || user.active === false) return res.sendStatus(401)
     req.user = {
       ...user,
       refreshToken: refreshToken

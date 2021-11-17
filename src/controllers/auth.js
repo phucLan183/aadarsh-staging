@@ -228,14 +228,8 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   try {
     const userId = req.user.userId
-    const { newPassword, confirmPassword } = req.body
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({
-        status: 'false',
-        message: 'Mật khẩu không trùng khớp!'
-      })
-    }
-    const hashPassword = await bcrypt.hash(confirmPassword, 10)
+    const password = req.body.password
+    const hashPassword = await bcrypt.hash(password, 10)
     const checkDataUser = await UsersModel.findByIdAndUpdate({
       _id: userId
     }, {
