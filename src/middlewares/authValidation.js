@@ -25,9 +25,16 @@ const validationBlog = (req, res, next) => {
   })
 }
 
+const validationMember = (req, res, next) => {
+  authorization(req, res, next, {
+    module: permissionModules.member
+  })
+}
+
 module.exports = {
   validationUser,
   validationReview,
   validationQuestion,
-  validationBlog
+  validationBlog,
+  validationMember
 }
