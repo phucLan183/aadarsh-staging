@@ -1,4 +1,4 @@
-const UsersModel = require('../models/Users');
+const UserModel = require('../models/Users');
 const bcrypt = require('bcrypt');
 
 const filterDataUser = '-refreshToken -createdAt -updatedAt -__v -password'
@@ -10,7 +10,7 @@ const getAllUsers = async (req, res) => {
     const skipPage = page * pageSize - pageSize
     const userId = req.user.userId
     const keyWord = req.query.keyWord || ''
-    const dataUsers = await UsersModel.find({
+    const dataUsers = await UserModel.find({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },
         { username: { $regex: keyWord, $options: 'i' } },
@@ -21,7 +21,7 @@ const getAllUsers = async (req, res) => {
         $nin: userId
       }
     }).select(filterDataUser).skip(skipPage).limit(pageSize).lean()
-    const totalUser = await UsersModel.countDocuments({
+    const totalUser = await UserModel.countDocuments({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },
         { username: { $regex: keyWord, $options: 'i' } },
@@ -48,7 +48,7 @@ const getAllUsers = async (req, res) => {
 const getOneUser = async (req, res) => {
   try {
     const userId = req.params.id
-    const dataUser = await UsersModel.findById(userId).select(filterDataUser).lean()
+    const dataUser = await UserModel.findById(userId).select(filterDataUser).lean()
 
     if (!dataUser) {
       return res.status(400).json({
@@ -73,7 +73,7 @@ const createUser = async (req, res) => {
   try {
     const body = req.body
     const hashPassword = await bcrypt.hash(body.password, 10)
-    const newUser = await UsersModel.create({
+    const newUser = await UserModel.create({
       username: body.username,
       email: body.email,
       fullname: body.fullname,
@@ -99,7 +99,7 @@ const updateUser = async (req, res) => {
     const userId = req.params.id
     const body = req.body
     if (body.password) var hashPassword = await bcrypt.hash(body.password, 10)
-    const dataUserUpdate = await UsersModel.findByIdAndUpdate({
+    const dataUserUpdate = await UserModel.findByIdAndUpdate({
       _id: userId
     }, {
       $set: {
@@ -146,7 +146,7 @@ const removeUser = async (req, res) => {
         message: 'Không thể tự xóa tài khoản!'
       })
     }
-    const delUser = await UsersModel.deleteOne({
+    const delUser = await UserModel.deleteOne({
       _id: userId
     }).lean()
     if (!delUser) {
@@ -169,7 +169,7 @@ const removeUser = async (req, res) => {
 const getCurrentUser = async (req, res) => {
   try {
     const currentUserId = req.user.userId
-    const dataUser = await UsersModel.findById(currentUserId).select(filterDataUser).lean()
+    const dataUser = await UserModel.findById(currentUserId).select(filterDataUser).lean()
     res.status(200).json({
       status: 'success',
       data: dataUser

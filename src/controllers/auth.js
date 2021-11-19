@@ -1,4 +1,4 @@
-const UsersModel = require('../models/Users');
+const UserModel = require('../models/Users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const transporter = require('../common/transporter');
@@ -8,7 +8,7 @@ const userRegister = async (req, res) => {
   try {
     const { username, password, email } = req.body
 
-    const checkUsername = await UsersModel.findOne({ username: username }).select('username').lean()
+    const checkUsername = await UserModel.findOne({ username: username }).select('username').lean()
     if (checkUsername) {
       return res.status(400).json({
         status: 'false',
@@ -16,7 +16,7 @@ const userRegister = async (req, res) => {
       })
     }
 
-    const checkEmail = await UsersModel.findOne({ email: email }).select('email').lean()
+    const checkEmail = await UserModel.findOne({ email: email }).select('email').lean()
     if (checkEmail) {
       return res.status(400).json({
         status: 'false',
@@ -25,7 +25,7 @@ const userRegister = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await UsersModel.create({
+    const newUser = await UserModel.create({
       username: username,
       fullname: username,
       email: email,
@@ -52,7 +52,7 @@ const userRegister = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const { username, password } = req.body
-    const checkDataUser = await UsersModel.findOne({ username: username }).lean()
+    const checkDataUser = await UserModel.findOne({ username: username }).lean()
 
     if (!checkDataUser || checkDataUser.active === false) {
       return res.status(400).json({
@@ -82,7 +82,7 @@ const userLogin = async (req, res) => {
       expiresIn: '7d'
     })
 
-    const dataUserUpdate = await UsersModel.findOneAndUpdate({
+    const dataUserUpdate = await UserModel.findOneAndUpdate({
       _id: checkDataUser._id
     }, {
       $push: {
@@ -111,7 +111,7 @@ const userLogout = async (req, res) => {
     const authHeader = req.headers['x-token']
     const token = authHeader && authHeader.split(' ')[1]
     const decode = jwt.decode(token)
-    const dataUser = await UsersModel.findByIdAndUpdate({
+    const dataUser = await UserModel.findByIdAndUpdate({
       _id: decode.userId
     }, {
       $set: {
@@ -153,7 +153,7 @@ const refreshToken = async (req, res) => {
     if (refreshToken === null) {
       return res.sendStatus(401)
     }
-    const dataUser = await UsersModel.findOne({
+    const dataUser = await UserModel.findOne({
       _id: userId
     }).select('active permission refreshToken').lean()
 
@@ -186,7 +186,7 @@ const refreshToken = async (req, res) => {
 const forgotPassword = async (req, res) => {
   try {
     const email = req.body.email
-    const checkDataUser = await UsersModel.findOne({ email: email }).select('email').lean()
+    const checkDataUser = await UserModel.findOne({ email: email }).select('email').lean()
     if (!checkDataUser || checkDataUser === null) {
       return res.status(400).json({
         status: 'false',
@@ -230,7 +230,7 @@ const resetPassword = async (req, res) => {
     const userId = req.user.userId
     const password = req.body.password
     const hashPassword = await bcrypt.hash(password, 10)
-    const checkDataUser = await UsersModel.findByIdAndUpdate({
+    const checkDataUser = await UserModel.findByIdAndUpdate({
       _id: userId
     }, {
       $set: {

@@ -1,17 +1,27 @@
 const FeedbackModel = require('../models/Feedbacks');
-const ReviewsModel = require('../models/Reviews');
+const ReviewModel = require('../models/Reviews');
 
 const getAllFeedback = async (req, res) => {
   try {
     const reviewId = req.params.reviewId
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-
+    const keyWord = req.query.keyword || ''
     const dataFeedback = await FeedbackModel.find({
-      reviewId: reviewId
+      reviewId: reviewId,
+      $or: [
+        { fullname: { $regex: keyWord, $options: 'i' } },
+        { content: { $regex: keyWord, $options: 'i' } }
+      ]
     }).select('fullname star content createdAt').skip(skipPage).limit(pageSize).lean()
-    const totalFeedback = await FeedbackModel.countDocuments()
+    const totalFeedback = await FeedbackModel.countDocuments({
+      reviewId: reviewId,
+      $or: [
+        { fullname: { $regex: keyWord, $options: 'i' } },
+        { content: { $regex: keyWord, $options: 'i' } }
+      ]
+    })
     res.status(200).json({
       status: 'success',
       data: dataFeedback,
@@ -64,7 +74,7 @@ const createFeedback = async (req, res) => {
       reviewId: reviewId,
     })
 
-    const updateReview = await ReviewsModel.findByIdAndUpdate({
+    const updateReview = await ReviewModel.findByIdAndUpdate({
       _id: reviewId
     }, {
       $addToSet: {
@@ -133,7 +143,7 @@ const deleteFeedback = async (req, res) => {
   try {
     const { reviewId, feedbackId } = req.params
 
-    const updateReview = await ReviewsModel.findOneAndUpdate({
+    const updateReview = await ReviewModel.findOneAndUpdate({
       _id: reviewId,
       feedbackId: feedbackId
     }, {

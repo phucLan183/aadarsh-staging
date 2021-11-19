@@ -1,4 +1,4 @@
-const MembersModel = require('../models/Members');
+const MemberModel = require('../models/Members');
 const bcrypt = require('bcrypt')
 const filterDataMember = '-refreshToken -createdAt -updatedAt -__v -password'
 
@@ -8,7 +8,7 @@ const getAllMembers = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 10;
     const skipPage = page * pageSize - pageSize
     const keyWord = req.query.keyWord || ''
-    const dataMembers = await MembersModel.find({
+    const dataMembers = await MemberModel.find({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },
         { username: { $regex: keyWord, $options: 'i' } },
@@ -16,7 +16,7 @@ const getAllMembers = async (req, res) => {
         { phoneNumber: { $regex: keyWord, $options: 'i' } }
       ]
     }).select(filterDataMember).skip(skipPage).limit(pageSize).lean()
-    const totalMember = await MembersModel.countDocuments({
+    const totalMember = await MemberModel.countDocuments({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },
         { username: { $regex: keyWord, $options: 'i' } },
@@ -40,7 +40,7 @@ const createMember = async (req, res) => {
   try {
     const body = req.body
     const hashPassword = await bcrypt.hash(body.password, 10)
-    const newMember = await MembersModel.create({
+    const newMember = await MemberModel.create({
       username: body.username,
       email: body.email,
       fullname: body.fullname,
@@ -63,7 +63,7 @@ const createMember = async (req, res) => {
 const getOneMember = async (req, res) => {
   try {
     const memberId = req.params.id
-    const dataMember = await MembersModel.findById(memberId).select(filterDataMember).lean()
+    const dataMember = await MemberModel.findById(memberId).select(filterDataMember).lean()
 
     if (!dataMember) {
       return res.status(400).json({
@@ -88,7 +88,7 @@ const updateMember = async (req, res) => {
     const memberId = req.params.id
     const body = req.body
     if (body.password) var hashPassword = await bcrypt.hash(body.password, 10)
-    const dataMemberUpdate = await MembersModel.findByIdAndUpdate({
+    const dataMemberUpdate = await MemberModel.findByIdAndUpdate({
       _id: memberId
     }, {
       $set: {
@@ -126,7 +126,7 @@ const updateMember = async (req, res) => {
 const removeMember = async (req, res) => {
   try {
     const memberId = req.params.id
-    const delUser = await MembersModel.deleteOne({
+    const delUser = await MemberModel.deleteOne({
       _id: memberId
     }).lean()
     if (!delUser) {

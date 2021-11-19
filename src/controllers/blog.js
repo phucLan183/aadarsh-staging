@@ -2,18 +2,31 @@ const BlogModel = require('../models/Blogs');
 
 const getAllBlogs = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-    const dataBlog = await BlogModel.find()
+    const keyWord = req.query.keyWord || ''
+    const dataBlog = await BlogModel.find({
+      $or: [
+        { title: { $regex: keyWord, $options: 'i' } },
+        { description: { $regex: keyWord, $options: 'i' } },
+        { content: { $regex: keyWord, $options: 'i' } }
+      ]
+    })
       .populate({
         path: 'tagId',
         select: '_id label'
       })
-      .select('title description content createdAt')
+      .select('title description content tagId createdAt')
       .skip(skipPage).limit(pageSize)
       .lean()
-    const totalBlog = await BlogModel.countDocuments()
+    const totalBlog = await BlogModel.countDocuments({
+      $or: [
+        { title: { $regex: keyWord, $options: 'i' } },
+        { description: { $regex: keyWord, $options: 'i' } },
+        { content: { $regex: keyWord, $options: 'i' } }
+      ]
+    })
     res.status(200).json({
       status: 'success',
       data: dataBlog,
@@ -120,7 +133,7 @@ const updateBlog = async (req, res) => {
 const deleteBlog = async (req, res) => {
   try {
     const blogId = req.params.id
-    const dataBlog = await BlogModel.deleteOne({
+    const dataBlog = await BlogModel.findByIdAndDelete({
       _id: blogId
     }).lean()
     if (!dataBlog) {

@@ -6,6 +6,6 @@ const tagController = require('../../controllers/tag');
 
 router.get('/tags', authenticateToken, validationBlog, tagController.getAllTags)
 router.post('/tags', authenticateToken, validationBlog, tagController.createTag)
-
+router.delete('/tags/:id', authenticateToken, validationBlog, tagController.deleteTag)
 
 module.exports = router

@@ -1,12 +1,23 @@
-const QuestionsModel = require('../models/Questions');
+const QuestionModel = require('../models/Questions');
 
 const getAllQuestions = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-    const dataQuestion = await QuestionsModel.find().select('title content createdAt').skip(skipPage).limit(pageSize).lean()
-    const totalQuestion = await QuestionsModel.countDocuments()
+    const keyWord = req.query.keyWord || ''
+    const dataQuestion = await QuestionModel.find({
+      $or: [
+        { title: { $regex: keyWord, $options: 'i' } },
+        { content: { $regex: keyWord, $options: 'i' } }
+      ]
+    }).select('title content createdAt').skip(skipPage).limit(pageSize).lean()
+    const totalQuestion = await QuestionModel.countDocuments({
+      $or: [
+        { title: { $regex: keyWord, $options: 'i' } },
+        { content: { $regex: keyWord, $options: 'i' } }
+      ]
+    })
     res.status(200).json({
       status: 'success',
       data: dataQuestion,
@@ -23,7 +34,7 @@ const getAllQuestions = async (req, res) => {
 const getOneQuestion = async (req, res) => {
   try {
     const questionId = req.params.id
-    const dataQuestion = await QuestionsModel.findById(questionId).select('title content createdAt').lean()
+    const dataQuestion = await QuestionModel.findById(questionId).select('title content createdAt').lean()
     if (!dataQuestion) {
       return res.status(400).json({
         status: 'false',
@@ -45,7 +56,7 @@ const getOneQuestion = async (req, res) => {
 const createQuestion = async (req, res) => {
   try {
     const { title, content } = req.body
-    const newQuestion = new QuestionsModel({
+    const newQuestion = new QuestionModel({
       title: title,
       content: content
     })
@@ -71,7 +82,7 @@ const updateQuestion = async (req, res) => {
   try {
     const questionId = req.params.id
     const { title, content } = req.body
-    const dataQuestion = await QuestionsModel.findByIdAndUpdate({
+    const dataQuestion = await QuestionModel.findByIdAndUpdate({
       _id: questionId
     }, {
       $set: {
@@ -102,7 +113,7 @@ const updateQuestion = async (req, res) => {
 const deleteQuestion = async (req, res) => {
   try {
     const questionId = req.params.id
-    const dataQuestion = await QuestionsModel.deleteOne({
+    const dataQuestion = await QuestionModel.deleteOne({
       _id: questionId
     })
     if (!dataQuestion) {

@@ -2,11 +2,16 @@ const TagModel = require('../models/Tags');
 
 const getAllTags = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-    const dataTag = await TagModel.find().select('_id label').skip(skipPage).limit(pageSize).lean()
-    const totalTags = await TagModel.countDocuments()
+    const keyWord = req.query.keyword || ''
+    const dataTag = await TagModel.find({
+      label: { $regex: keyWord, $options: 'i' }
+    }).select('_id label').skip(skipPage).limit(pageSize).lean()
+    const totalTags = await TagModel.countDocuments({
+      label: { $regex: keyWord, $options: 'i' }
+    })
     res.status(200).json({
       status: 'success',
       data: dataTag,
@@ -43,7 +48,33 @@ const createTag = async (req, res) => {
   }
 }
 
+const deleteTag = async (req, res) => {
+  try {
+    const tagId = req.params.id
+    const checkDataTag = await TagModel.findById(tagId).lean()
+    if (!checkDataTag) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Không tìm thấy dữ liệu!'
+      })
+    }
+    const dataTag = await TagModel.deleteOne({
+      _id: tagId
+    })
+    if (dataTag)
+      res.status(200).json({
+        status: 'success',
+      })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message
+    })
+  }
+}
+
 module.exports = {
   getAllTags: getAllTags,
-  createTag: createTag
+  createTag: createTag,
+  deleteTag: deleteTag
 }
