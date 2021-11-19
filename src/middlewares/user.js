@@ -10,9 +10,12 @@ const validationEditPermission = async (req, res, next) => {
   const targetUserActive = req.body.active
   if (userId === targetUserId) {
     const isNotChangedPermission = !targetUserPermission || comparePermission(dataTargetUser.permission, targetUserPermission)
-    const isNotChangedActive = !targetUserActive || targetUserActive === dataTargetUser.active
-    if (isNotChangedPermission && isNotChangedActive) next()
-    else {
+    const isNotChangedActive = targetUserActive === dataTargetUser.active || !targetUserActive
+    console.log('14', isNotChangedPermission);
+    console.log('15', isNotChangedActive);
+    if (isNotChangedPermission && isNotChangedActive) {
+      next()
+    } else {
       res.status(403).json({
         status: 'false',
         message: 'Không thể tự cập nhật quyền!'

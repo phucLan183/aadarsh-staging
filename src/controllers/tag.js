@@ -5,7 +5,7 @@ const getAllTags = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-    const keyWord = req.query.keyword || ''
+    const keyWord = req.query.keyWord || ''
     const dataTag = await TagModel.find({
       label: { $regex: keyWord, $options: 'i' }
     }).select('_id label').skip(skipPage).limit(pageSize).lean()
