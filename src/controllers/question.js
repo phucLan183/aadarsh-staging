@@ -113,7 +113,7 @@ const updateQuestion = async (req, res) => {
 const deleteQuestion = async (req, res) => {
   try {
     const questionId = req.params.id
-    const dataQuestion = await QuestionModel.deleteOne({
+    const dataQuestion = await QuestionModel.findByIdAndDelete({
       _id: questionId
     })
     if (!dataQuestion) {

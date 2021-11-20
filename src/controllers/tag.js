@@ -41,6 +41,12 @@ const createTag = async (req, res) => {
       data: dataTag
     })
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Dữ liệu đã được sử dụng!'
+      })
+    }
     res.status(500).json({
       status: 'false',
       message: error.message
@@ -51,20 +57,18 @@ const createTag = async (req, res) => {
 const deleteTag = async (req, res) => {
   try {
     const tagId = req.params.id
-    const checkDataTag = await TagModel.findById(tagId).lean()
+    const checkDataTag = await TagModel.findByIdAndDelete({
+      _id: tagId
+    }).lean()
     if (!checkDataTag) {
       return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy dữ liệu!'
       })
     }
-    const dataTag = await TagModel.deleteOne({
-      _id: tagId
+    res.status(200).json({
+      status: 'success',
     })
-    if (dataTag)
-      res.status(200).json({
-        status: 'success',
-      })
   } catch (error) {
     res.status(500).json({
       status: 'false',

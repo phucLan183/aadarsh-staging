@@ -7,13 +7,11 @@ const validationEditPermission = async (req, res, next) => {
   const targetUserId = req.params.id
   const targetUserPermission = req.body.permission
   const dataTargetUser = await UsersModel.findById(targetUserId)
-  const targetUserActive = req.body.active
+  const targetUserActive = req.body.active || false
   if (userId === targetUserId) {
     const isNotChangedPermission = !targetUserPermission || comparePermission(dataTargetUser.permission, targetUserPermission)
     const isNotChangedActive = targetUserActive === dataTargetUser.active || !targetUserActive
-    console.log('14', isNotChangedPermission);
-    console.log('15', isNotChangedActive);
-    if (isNotChangedPermission && isNotChangedActive) {
+    if (isNotChangedPermission && !isNotChangedActive) {
       next()
     } else {
       res.status(403).json({
