@@ -2,20 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
-  name: {
+  fullname: {
     type: String,
     required: true
   },
-  productId: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    default: undefined
-  }],
-  feedbackId: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Feedback",
-    default: undefined
-  }]
+  star: {
+    type: Number,
+    min: 1,
+    max: 5,
+  },
+  content: {
+    type: String,
+    required: true,
+  }
 }, {
   timestamps: true
 });

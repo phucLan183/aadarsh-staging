@@ -43,7 +43,7 @@ const createMember = async (req, res) => {
     const newMember = await MemberModel.create({
       username: body.username,
       email: body.email,
-      fullname: body.fullname,
+      fullname: body.username,
       password: hashPassword,
       phoneNumber: body.phoneNumber,
       avatar: body.avatar,
