@@ -1,5 +1,7 @@
 const BlogModel = require('../models/Blogs');
 
+
+
 const getAllBlogs = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1
@@ -7,25 +9,13 @@ const getAllBlogs = async (req, res) => {
     const skipPage = page * pageSize - pageSize
     const keyWord = req.query.keyWord || ''
     const dataBlog = await BlogModel.find({
-      $or: [
-        { title: { $regex: keyWord, $options: 'i' } },
-        { description: { $regex: keyWord, $options: 'i' } },
-        { content: { $regex: keyWord, $options: 'i' } }
-      ]
-    })
-      .populate({
-        path: 'tagId',
-        select: '_id label'
-      })
-      .select('title description content tagId createdAt')
-      .skip(skipPage).limit(pageSize)
-      .lean()
+      title: { $regex: keyWord, $options: 'i' }
+    }).populate([
+      { path: 'tagId', select: '_id label' },
+      { path: 'createdBy', select: '_id username' }
+    ]).skip(skipPage).limit(pageSize).lean()
     const totalBlog = await BlogModel.countDocuments({
-      $or: [
-        { title: { $regex: keyWord, $options: 'i' } },
-        { description: { $regex: keyWord, $options: 'i' } },
-        { content: { $regex: keyWord, $options: 'i' } }
-      ]
+      title: { $regex: keyWord, $options: 'i' }
     })
     res.status(200).json({
       status: 'success',
@@ -45,9 +35,10 @@ const getOneBlog = async (req, res) => {
     const blogId = req.params.id
     const dataBlog = await BlogModel.findById({
       _id: blogId
-    }).populate({
-      path: 'tagId'
-    }).select('title description content createdAt').lean()
+    }).populate(
+      { path: 'tagId', select: '_id label' },
+      { path: 'createBy', select: '_id username' },
+    ).lean()
     if (!dataBlog) {
       return res.status(400).json({
         status: 'false',
@@ -68,17 +59,24 @@ const getOneBlog = async (req, res) => {
 
 const createBlog = async (req, res) => {
   try {
-    const { title, description, content, tagId } = req.body
+    const body = req.body
     const newBlog = await BlogModel.create({
-      title: title,
-      description: description,
-      content: content,
-      tagId: tagId
+      title: body.title,
+      description: body.description,
+      content: body.content,
+      tagId: body.tagId,
+      active: body.active,
+      urlId: body.urlId,
+      thumbnail: body.thumbnail,
+      createdBy: body.createdBy
     })
     const dataBlog = {
       _id: newBlog._id,
       title: newBlog.title,
       description: newBlog.description,
+      thumbnail: body.thumbnail,
+      urlId: body.urlId,
+      active: body.active,
       content: newBlog.content,
       createdAt: newBlog.createdAt
     }
@@ -96,20 +94,25 @@ const createBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
   try {
-    const { title, description, content, tagId } = req.body
+    const body = req.body
     const blogId = req.params.id
     const dataBlog = await BlogModel.findOneAndUpdate({
       _id: blogId
     }, {
       $set: {
-        title: title,
-        description: description,
-        content: content,
-        tagId: tagId
+        title: body.title,
+        description: body.description,
+        content: body.content,
+        tagId: body.tagId,
+        active: body.active,
+        urlId: body.urlId,
+        thumbnail: body.thumbnail,
+        createdBy: body.createdBy
       }
     }, {
-      new: true
-    }).select('title description content createdAt')
+      new: true,
+      multi: true
+    })
 
     if (!dataBlog) {
       return res.status(400).json({

@@ -6,6 +6,22 @@ const BlogSchema = new Schema({
     type: String,
     required: true
   },
+  urlId: {
+    type: String,
+    trim: true,
+    required: true
+  },
+  thumbnail: {
+    type: String
+  },
+  active: {
+    type: Boolean,
+    default: false
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   description: {
     type: String,
     required: true
@@ -19,7 +35,8 @@ const BlogSchema = new Schema({
     ref: 'Tag'
   }]
 }, {
-  timestamps: true
+  timestamps: true,
+  versionKey: false
 })
 
 const Blog = mongoose.model('Blog', BlogSchema)
