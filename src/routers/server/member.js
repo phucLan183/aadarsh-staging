@@ -5,6 +5,7 @@ const { validationMember } = require('../../middlewares/authValidation');
 const memberController = require('../../controllers/member');
 
 // Member
+router.get('/current-member', authenticateToken, memberController.getCurrentMember)
 router.get('/members', authenticateToken, validationMember, memberController.getAllMembers)
 router.post('/members', authenticateToken, validationMember, memberController.createMember)
 router.get('/member/:id', authenticateToken, validationMember, memberController.getOneMember)

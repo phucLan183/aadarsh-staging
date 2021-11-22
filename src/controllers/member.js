@@ -146,10 +146,27 @@ const removeMember = async (req, res) => {
   }
 }
 
+const getCurrentMember = async (req, res) => {
+  try {
+    const currentMemberId = req.user.userId
+    const dataMember = await UserModel.findById(currentMemberId).select(filterDataUser).lean()
+    res.status(200).json({
+      status: 'success',
+      data: dataMember
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
+
 module.exports = {
   getAllMembers: getAllMembers,
   createMember: createMember,
   getOneMember: getOneMember,
   updateMember: updateMember,
   removeMember: removeMember,
+  getCurrentMember: getCurrentMember
 }
