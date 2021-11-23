@@ -35,10 +35,10 @@ const getOneBlog = async (req, res) => {
     const blogId = req.params.id
     const dataBlog = await BlogModel.findById({
       _id: blogId
-    }).populate(
+    }).populate([
       { path: 'tagId', select: '_id label' },
-      { path: 'createBy', select: '_id username' },
-    ).lean()
+      { path: 'createdBy', select: '_id username' }
+    ]).lean()
     if (!dataBlog) {
       return res.status(400).json({
         status: 'false',

@@ -6,7 +6,7 @@ const getAllImages = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-    const dataImage = await ImageModel.find().select('urlImage publicIdImage createdAt').skip(skipPage).limit(pageSize).lean()
+    const dataImage = await ImageModel.find().select('-updatedAt').skip(skipPage).limit(pageSize).lean()
     const totalImage = await ImageModel.countDocuments()
     res.status(200).json({
       status: 'success',
@@ -35,7 +35,7 @@ const createImage = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        url: saveData.urlImage
+        urlImage: saveData.urlImage
       }
     })
   } catch (error) {
@@ -51,7 +51,7 @@ const getOneImage = async (req, res) => {
     const imageId = req.params.id
     const dataImage = await ImageModel.findById({
       _id: imageId
-    }).select('urlImage publicIdImage createdAt').lean()
+    }).select('-updatedAt').lean()
     if (!dataImage) {
       return res.status(400).json({
         status: 'false',

@@ -10,7 +10,8 @@ const ImageSchema = new Schema({
     required: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  versionKey: false
 })
 const Image = mongoose.model('Image', ImageSchema)
 module.exports = Image
