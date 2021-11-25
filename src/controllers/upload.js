@@ -25,7 +25,7 @@ const createImage = async (req, res) => {
   try {
     const image = req.file.path
     const uploadImageIntoCloud = await cloudinary.uploader.upload(image, {
-      folder: 'Images'
+      folder: 'images'
     })
     const dataImage = new ImageModel({
       urlImage: uploadImageIntoCloud.secure_url,
@@ -35,7 +35,7 @@ const createImage = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        urlImage: saveData.urlImage
+        url: saveData.urlImage
       }
     })
   } catch (error) {
@@ -51,7 +51,7 @@ const getOneImage = async (req, res) => {
     const imageId = req.params.id
     const dataImage = await ImageModel.findById({
       _id: imageId
-    }).select('-updatedAt').lean()
+    }).select('urlImage').lean()
     if (!dataImage) {
       return res.status(400).json({
         status: 'false',
@@ -60,7 +60,9 @@ const getOneImage = async (req, res) => {
     }
     res.status(200).json({
       status: 'success',
-      data: dataImage
+      data: {
+        url: dataImage.urlImage
+      }
     })
   } catch (error) {
     res.status(500).json({

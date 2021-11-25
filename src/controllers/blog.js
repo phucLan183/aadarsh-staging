@@ -1,7 +1,5 @@
 const BlogModel = require('../models/Blogs');
 
-
-
 const getAllBlogs = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1
@@ -12,7 +10,7 @@ const getAllBlogs = async (req, res) => {
       title: { $regex: keyWord, $options: 'i' }
     }).populate([
       { path: 'tagId', select: '_id label' },
-      { path: 'createdBy', select: '_id username' }
+      { path: 'createdBy', select: '_id username fullname' }
     ]).skip(skipPage).limit(pageSize).lean()
     const totalBlog = await BlogModel.countDocuments({
       title: { $regex: keyWord, $options: 'i' }
@@ -37,7 +35,7 @@ const getOneBlog = async (req, res) => {
       _id: blogId
     }).populate([
       { path: 'tagId', select: '_id label' },
-      { path: 'createdBy', select: '_id username' }
+      { path: 'createdBy', select: '_id username fullname' }
     ]).lean()
     if (!dataBlog) {
       return res.status(400).json({
