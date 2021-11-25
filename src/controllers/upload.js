@@ -33,10 +33,7 @@ const createImage = async (req, res) => {
     })
     const saveData = await dataImage.save()
     res.status(200).json({
-      status: 'success',
-      data: {
-        url: saveData.urlImage
-      }
+      url: saveData.urlImage
     })
   } catch (error) {
     res.status(500).json({
