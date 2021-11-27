@@ -8,7 +8,9 @@ const getAllTags = async (req, res) => {
     const keyWord = req.query.keyWord || ''
     const dataTag = await TagModel.find({
       label: { $regex: keyWord, $options: 'i' }
-    }).select('_id label').skip(skipPage).limit(pageSize).lean()
+    }).sort({
+      "_id": -1
+    }).select('-__v').skip(skipPage).limit(pageSize).lean()
     const totalTags = await TagModel.countDocuments({
       label: { $regex: keyWord, $options: 'i' }
     })

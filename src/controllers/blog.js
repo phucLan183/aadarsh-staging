@@ -11,7 +11,9 @@ const getAllBlogs = async (req, res) => {
     }).populate([
       { path: 'tagId', select: '_id label' },
       { path: 'createdBy', select: '_id username fullname' }
-    ]).skip(skipPage).limit(pageSize).lean()
+    ]).skip(skipPage).limit(pageSize).sort({
+      "_id": -1
+    }).lean()
     const totalBlog = await BlogModel.countDocuments({
       title: { $regex: keyWord, $options: 'i' }
     })
@@ -66,7 +68,7 @@ const createBlog = async (req, res) => {
       active: body.active,
       urlId: body.urlId,
       thumbnail: body.thumbnail,
-      createdBy: body.createdBy
+      createdBy: req.user.userId
     })
     const dataBlog = {
       _id: newBlog._id,
@@ -105,7 +107,7 @@ const updateBlog = async (req, res) => {
         active: body.active,
         urlId: body.urlId,
         thumbnail: body.thumbnail,
-        createdBy: body.createdBy
+        createdBy: req.user.userId
       }
     }, {
       new: true,

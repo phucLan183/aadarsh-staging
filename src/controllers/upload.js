@@ -6,7 +6,9 @@ const getAllImages = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-    const dataImage = await ImageModel.find().select('-updatedAt').skip(skipPage).limit(pageSize).lean()
+    const dataImage = await ImageModel.find().sort({
+      "_id": -1
+    }).select('-updatedAt').skip(skipPage).limit(pageSize).lean()
     const totalImage = await ImageModel.countDocuments()
     res.status(200).json({
       status: 'success',
