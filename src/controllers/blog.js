@@ -85,6 +85,12 @@ const createBlog = async (req, res) => {
       data: dataBlog
     })
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tiêu đề đã được sử dụng!'
+      })
+    }
     res.status(500).json({
       status: 'false',
       message: error.message
@@ -126,6 +132,12 @@ const updateBlog = async (req, res) => {
       data: dataBlog
     })
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tiêu đề đã được sử dụng!'
+      })
+    }
     res.status(500).json({
       status: 'false',
       message: error.message

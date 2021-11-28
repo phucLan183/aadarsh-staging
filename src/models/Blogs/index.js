@@ -4,11 +4,13 @@ const Schema = mongoose.Schema;
 const BlogSchema = new Schema({
   title: {
     type: String,
+    unique: true,
     required: true
   },
   urlId: {
     type: String,
     trim: true,
+    unique: true,
     required: true
   },
   thumbnail: {
