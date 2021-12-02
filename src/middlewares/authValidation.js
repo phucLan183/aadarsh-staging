@@ -31,10 +31,17 @@ const validationMember = (req, res, next) => {
   })
 }
 
+const validationCategory = (req, res, next) => {
+  authorization(req, res, next, {
+    module: permissionModules.category
+  })
+}
+
 module.exports = {
   validationUser,
   validationReview,
   validationQuestion,
   validationBlog,
-  validationMember
+  validationMember,
+  validationCategory
 }

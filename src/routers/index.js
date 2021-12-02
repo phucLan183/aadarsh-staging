@@ -9,6 +9,7 @@ const blogRoute = require('./server/blog');
 const tagRoute = require('./server/tag');
 const memberRoute = require('./server/member');
 const uploadRoute = require('./server/upload');
+const categoryRoute = require('./server/category');
 
 const contactRoute = require('./client/contact');
 
@@ -22,7 +23,8 @@ const defaultRoutes = [
   tagRoute,
   contactRoute,
   memberRoute,
-  uploadRoute
+  uploadRoute,
+  categoryRoute,
 ]
 
 defaultRoutes.forEach((route) => {

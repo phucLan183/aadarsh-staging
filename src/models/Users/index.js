@@ -15,6 +15,7 @@ const permission = {
   blog: typeModelPermission,
   layout: typeModelPermission,
   product: typeModelPermission,
+  category: typeModelPermission,
   user: typeModelPermission,
   member: typeModelPermission,
   contact: typeModelPermission,
