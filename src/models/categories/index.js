@@ -14,6 +14,18 @@ const CategorySchema = new Schema({
     unique: true,
     required: true
   },
+  price: {
+    type: String,
+    trim: true
+  },
+  thumbnail: {
+    type: String,
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true
+  },
   storage: {
     type: Array,
     default: undefined

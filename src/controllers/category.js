@@ -1,4 +1,4 @@
-const CategoryModel = require('../models/categories');
+const CategoryModel = require('../models/Categories');
 
 const getAllCategories = async (req, res) => {
   try {
@@ -8,7 +8,7 @@ const getAllCategories = async (req, res) => {
     const keyWord = req.query.keyWord || ''
     const dataCategory = await CategoryModel.find({
       title: { $regex: keyWord, $options: 'i' }
-    }).sort({ _id: -1 }).skip(skipPage).limit(pageSize)
+    }).sort({ _id: -1 }).select('-storage').skip(skipPage).limit(pageSize)
     const totalCategory = await CategoryModel.countDocuments({
       title: { $regex: keyWord, $options: 'i' }
     })
@@ -84,6 +84,9 @@ const updateCategory = async (req, res) => {
       $set: {
         name: body.name,
         slug: body.slug,
+        price: body.price,
+        thumbnail: body.thumbnail,
+        description: body.description,
         storage: body.storage
       }
     }, {
