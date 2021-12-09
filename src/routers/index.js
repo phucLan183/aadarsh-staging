@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+// Server
 const userRoute = require('./server/user');
 const reviewRoute = require('./server/review');
 const feedbackRoute = require('./server/feedback');
@@ -11,6 +12,8 @@ const memberRoute = require('./server/member');
 const uploadRoute = require('./server/upload');
 const categoryRoute = require('./server/category');
 const settingRoute = require('./server/setting');
+
+// Client
 const contactRoute = require('./client/contact');
 
 const defaultRoutes = [

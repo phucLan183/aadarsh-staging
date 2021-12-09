@@ -53,7 +53,8 @@ const createCategory = async (req, res) => {
     const newCategory = new CategoryModel({
       name: body.name,
       slug: body.slug,
-      storage: body.storage
+      storage: body.storage,
+      active: body.active
     })
     const dataCategory = await newCategory.save()
     res.status(200).json({
@@ -87,6 +88,7 @@ const updateCategory = async (req, res) => {
         price: body.price,
         thumbnail: body.thumbnail,
         description: body.description,
+        active: body.active,
         storage: body.storage
       }
     }, {
