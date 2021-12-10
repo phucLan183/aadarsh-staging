@@ -15,6 +15,7 @@ const settingRoute = require('./server/setting');
 
 // Client
 const contactRoute = require('./client/contact');
+const navRoute = require('./client/navigation');
 
 const defaultRoutes = [
   authRoute,
@@ -28,7 +29,8 @@ const defaultRoutes = [
   memberRoute,
   uploadRoute,
   categoryRoute,
-  settingRoute
+  settingRoute,
+  navRoute
 ]
 
 defaultRoutes.forEach((route) => {
