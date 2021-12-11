@@ -54,7 +54,10 @@ const createCategory = async (req, res) => {
       name: body.name,
       slug: body.slug,
       storage: body.storage,
-      active: body.active
+      active: body.active,
+      price: body.price,
+      thumbnail: body.thumbnail,
+      description: body.description
     })
     const dataCategory = await newCategory.save()
     res.status(200).json({

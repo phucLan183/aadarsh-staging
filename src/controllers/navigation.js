@@ -27,6 +27,7 @@ const getNavigation = async (req, res) => {
     const { type, slug } = req.query
     if (type === 'CATEGORY') {
       const dataCategory = await CategoryModel.findOne({
+        active: true,
         slug: slug
       })
       if (!dataCategory) {
