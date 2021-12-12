@@ -168,10 +168,56 @@ const deleteBlog = async (req, res) => {
   }
 }
 
+
+// Client
+const TagModel = require('../models/Tags');
+
+const getAllBlogInClient = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 10
+    const skipPage = page * pageSize - pageSize
+    const keyWord = req.query.keyWord || ''
+    const filter = req.query.filter?.split(",")
+
+    const dataBlog = await BlogModel.find({
+      active: true,
+      title: { $regex: keyWord, $options: 'i' }
+    }).populate([
+      { path: 'tagId', select: '_id label' },
+      { path: 'createdBy', select: '_id username fullname' }
+    ]).skip(skipPage).limit(pageSize).sort({
+      "_id": -1
+    }).lean()
+
+    let data = dataBlog
+    if (filter) {
+      data = dataBlog.filter((item) => {
+        let isInclude = false
+        item.tagId.map(tag => {
+          if (filter.includes(tag._id.toString())) isInclude = true
+        })
+        return isInclude
+      })
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: data
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message
+    })
+  }
+}
+
 module.exports = {
   getAllBlogs: getAllBlogs,
   getOneBlog: getOneBlog,
   createBlog: createBlog,
   updateBlog: updateBlog,
-  deleteBlog: deleteBlog
+  deleteBlog: deleteBlog,
+  getAllBlogInClient: getAllBlogInClient
 }

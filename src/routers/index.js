@@ -14,8 +14,7 @@ const categoryRoute = require('./server/category');
 const settingRoute = require('./server/setting');
 
 // Client
-const contactRoute = require('./client/contact');
-const navRoute = require('./client/navigation');
+const clientRoute = require('./client');
 
 const defaultRoutes = [
   authRoute,
@@ -25,12 +24,11 @@ const defaultRoutes = [
   questionRoute,
   blogRoute,
   tagRoute,
-  contactRoute,
   memberRoute,
   uploadRoute,
   categoryRoute,
   settingRoute,
-  navRoute
+  clientRoute
 ]
 
 defaultRoutes.forEach((route) => {
