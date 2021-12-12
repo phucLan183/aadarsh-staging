@@ -13,6 +13,7 @@ router.get('/navigation', navController.getNavigation)
 router.post('/contact', contactController)
 
 router.get('/client/blogs', blogController.getAllBlogInClient)
+router.get('/client/blog/:id', blogController.getOneBlog)
 
 router.get('/client/tags', tagController.getAllTags)
 
