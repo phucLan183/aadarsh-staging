@@ -267,8 +267,8 @@ const refreshToken = async (req, res) => {
 const forgotPassword = async (req, res) => {
   try {
     const email = req.body.email
-    const checkDataUser = await UserModel.findOne({ email: email }).select('email').lean()
-    if (!checkDataUser || checkDataUser === null) {
+    const checkDataMember = await MemberModel.findOne({ email: email }).select('email').lean()
+    if (!checkDataMember) {
       return res.status(400).json({
         status: 'false',
         message: 'Email không tồn tại'
@@ -276,7 +276,7 @@ const forgotPassword = async (req, res) => {
     }
 
     const resetToken = jwt.sign({
-      userId: checkDataUser._id,
+      userId: checkDataMember._id,
     }, config.resetToken, {
       expiresIn: "3m"
     })
@@ -311,14 +311,14 @@ const resetPassword = async (req, res) => {
     const userId = req.user.userId
     const password = req.body.password
     const hashPassword = await bcrypt.hash(password, 10)
-    const checkDataUser = await UserModel.findByIdAndUpdate({
+    const checkDataMember = await MemberModel.findByIdAndUpdate({
       _id: userId
     }, {
       $set: {
         password: hashPassword
       }
     })
-    if (!checkDataUser) {
+    if (!checkDataMember) {
       return res.status(400).json({
         status: 'false',
         message: 'Không tìm thấy tài khoản này!'
@@ -326,6 +326,30 @@ const resetPassword = async (req, res) => {
     }
     res.status(200).json({
       status: 'success'
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
+
+const getCurrentUser = async (req, res) => {
+  try {
+    const currentUserId = req.user.userId
+    const selectData = '-refreshToken -createdAt -updatedAt -__v -password'
+    const dataUser = await UserModel.findById({ _id: currentUserId }).select(selectData).lean()
+    if (!dataUser) {
+      const dataMember = await MemberModel.findById({ _id: currentUserId }).select(selectData).lean()
+      return res.status(200).json({
+        status: 'success',
+        data: dataMember
+      })
+    }
+    res.status(200).json({
+      status: 'success',
+      data: dataUser
     })
   } catch (error) {
     res.status(500).json({
@@ -344,4 +368,5 @@ module.exports = {
   refreshToken: refreshToken,
   forgotPassword: forgotPassword,
   resetPassword: resetPassword,
+  getCurrentUser: getCurrentUser
 }

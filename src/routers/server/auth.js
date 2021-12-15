@@ -12,4 +12,7 @@ router.post('/auth/refresh-token', authenticateRefreshToken, authController.refr
 
 router.post('/auth/request-reset-password', authController.forgotPassword)
 router.post('/auth/reset-password', authenticateResetToken, authController.resetPassword)
+
+router.get('/current-user', authenticateToken, authController.getCurrentUser)
+
 module.exports = router
