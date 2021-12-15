@@ -1,45 +1,41 @@
 const UserModel = require('../models/Users');
+const MemberModel = require('../models/Members')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const transporter = require('../common/transporter');
 const config = require('../config');
 
-const userRegister = async (req, res) => {
+const register = async (req, res) => {
   try {
     const { username, password, email } = req.body
+    const checkData = await MemberModel.findOne({
+      $or: [
+        { username: username },
+        { email: email }
+      ]
+    }).select('username email')
 
-    const checkUsername = await UserModel.findOne({ username: username }).select('username').lean()
-    if (checkUsername) {
+    if (checkData?.username === username) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên đăng nhập đã được sử dụng!'
+        message: `Username đã được sử dụng!`
       })
-    }
-
-    const checkEmail = await UserModel.findOne({ email: email }).select('email').lean()
-    if (checkEmail) {
+    } else if (checkData?.email === email) {
       return res.status(400).json({
         status: 'false',
-        message: 'Email đã được sử dụng!'
+        message: `Email đã được sử dụng!`
       })
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await UserModel.create({
+    const newUser = await MemberModel.create({
       username: username,
       fullname: username,
       email: email,
       password: hashPassword
     })
-    const userData = {
-      _id: newUser._id,
-      username: newUser.username,
-      fullname: newUser.fullname,
-      email: newUser.email
-    }
     res.status(200).json({
-      status: 'success',
-      data: userData
+      status: 'success'
     })
   } catch (error) {
     res.status(500).json({
@@ -49,23 +45,19 @@ const userRegister = async (req, res) => {
   }
 }
 
-const userLogin = async (req, res) => {
+const userLogin = async (req, res, next) => {
   try {
     const { username, password } = req.body
-    const checkDataUser = await UserModel.findOne({ username: username }).lean()
-
-    if (!checkDataUser || checkDataUser.active === false) {
-      return res.status(400).json({
-        status: 'false',
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
-      })
+    const checkDataUser = await UserModel.findOne({
+      username: username,
+      active: true
+    }).lean()
+    if (!checkDataUser) {
+      return next()
     }
     const comparePass = await bcrypt.compare(password, checkDataUser.password)
     if (!comparePass) {
-      return res.status(400).json({
-        status: 'false',
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
-      })
+      return next()
     }
     const accessToken = jwt.sign({
       userId: checkDataUser._id,
@@ -92,12 +84,97 @@ const userLogin = async (req, res) => {
       new: true
     }).select('username email permission fullname')
 
-    return res.json({
+    res.status(200).json({
       status: 'success',
       data: dataUserUpdate,
       act: accessToken,
       rft: refreshToken
     });
+
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
+
+const memberLogin = async (req, res) => {
+  try {
+    const { username, password } = req.body
+    const checkDataMember = await MemberModel.findOne({
+      username: username,
+      active: true
+    }).lean()
+    if (!checkDataMember) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+      })
+    }
+    const comparePass = await bcrypt.compare(password, checkDataMember.password)
+    if (!comparePass) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+      })
+    }
+    const accessToken = jwt.sign({
+      userId: checkDataMember._id,
+      active: checkDataMember.active
+    }, config.accessToken, {
+      expiresIn: '30m'
+    })
+
+    const refreshToken = jwt.sign({
+      userId: checkDataMember._id,
+      active: checkDataMember.active
+    }, config.refreshToken, {
+      expiresIn: '7d'
+    })
+
+    const dataUserUpdate = await MemberModel.findOneAndUpdate({
+      _id: checkDataMember._id
+    }, {
+      $push: {
+        refreshToken: refreshToken
+      }
+    }, {
+      new: true
+    }).select('username email permission fullname')
+
+    res.status(200).json({
+      status: 'success',
+      data: dataUserUpdate,
+      act: accessToken,
+      rft: refreshToken
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
+    })
+  }
+}
+
+const memberLogout = async (req, res, decode) => {
+  try {
+    const dataUser = await MemberModel.findByIdAndUpdate({
+      _id: decode.userId
+    }, {
+      $set: {
+        refreshToken: []
+      }
+    })
+    if (!dataUser) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Không tìm thấy dữ liệu!'
+      })
+    }
+    res.status(200).json({
+      success: "success",
+    })
   } catch (error) {
     res.status(500).json({
       status: 'false',
@@ -119,10 +196,7 @@ const userLogout = async (req, res) => {
       }
     })
     if (!dataUser) {
-      return res.status(400).json({
-        status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
-      })
+      return memberLogout(req, res, decode)
     }
     res.status(200).json({
       success: "success",
@@ -255,8 +329,9 @@ const resetPassword = async (req, res) => {
 }
 
 module.exports = {
-  userRegister: userRegister,
+  register: register,
   userLogin: userLogin,
+  memberLogin: memberLogin,
   userLogout: userLogout,
   accessToken: accessToken,
   refreshToken: refreshToken,

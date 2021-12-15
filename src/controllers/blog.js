@@ -186,7 +186,7 @@ const getAllBlogInClient = async (req, res) => {
     }).populate([
       { path: 'tagId', select: '_id label' },
       { path: 'createdBy', select: '_id username fullname' }
-    ]).skip(skipPage).limit(pageSize).sort({
+    ]).skip(skipPage).sort({
       "_id": -1
     }).lean()
 
@@ -203,7 +203,8 @@ const getAllBlogInClient = async (req, res) => {
 
     res.status(200).json({
       status: 'success',
-      data: data
+      data: data.slice(0, pageSize),
+      total: data.length
     })
   } catch (error) {
     res.status(500).json({

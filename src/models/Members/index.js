@@ -35,7 +35,7 @@ const MemberSchema = new Schema({
   },
   active: {
     type: Boolean,
-    default: false
+    default: true
   },
   refreshToken: {
     type: Array,
