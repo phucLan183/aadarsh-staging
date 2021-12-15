@@ -8,19 +8,26 @@ const config = require('../config');
 const register = async (req, res) => {
   try {
     const { username, password, email } = req.body
-    const checkData = await MemberModel.findOne({
+    const checkDataMember = await MemberModel.findOne({
       $or: [
         { username: username },
         { email: email }
       ]
     }).select('username email')
-
-    if (checkData?.username === username) {
+    const checkDataUser = await UserModel.findOne({
+      $or: [
+        { username: username },
+        { email: email }
+      ]
+    })
+    const validationUsername = checkDataMember?.username === username || checkDataUser?.username === username
+    const validationEmail = checkDataMember?.email === email || checkDataUser?.email === email
+    if (validationUsername) {
       return res.status(400).json({
         status: 'false',
         message: `Username đã được sử dụng!`
       })
-    } else if (checkData?.email === email) {
+    } else if (validationEmail) {
       return res.status(400).json({
         status: 'false',
         message: `Email đã được sử dụng!`
