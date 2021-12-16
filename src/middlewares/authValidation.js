@@ -37,11 +37,18 @@ const validationCategory = (req, res, next) => {
   })
 }
 
+const validationProduct = (req, res, next) => {
+  authorization(req, res, next, {
+    module: permissionModules.product
+  })
+}
+
 module.exports = {
   validationUser,
   validationReview,
   validationQuestion,
   validationBlog,
   validationMember,
-  validationCategory
+  validationCategory,
+  validationProduct
 }
