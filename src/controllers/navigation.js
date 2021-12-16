@@ -3,8 +3,8 @@ const ProductModel = require('../models/Products');
 
 const getNavigations = async (req, res) => {
   try {
-    const dataCategory = await CategoryModel.find().select('name slug')
-    const dataProduct = await ProductModel.find().select('name slug categoryId')
+    const dataCategory = await CategoryModel.find({ active: true }).select('name slug')
+    const dataProduct = await ProductModel.find({ active: true }).select('name slug categoryId')
 
     const dataCategoryWithProducts = dataCategory.map((item) => ({
       _id: item._id,
