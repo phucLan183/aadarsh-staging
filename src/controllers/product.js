@@ -8,6 +8,9 @@ const getAllProducts = async (req, res) => {
     const keyWord = req.query.keyWord || ''
     const dataProducts = await ProductModel.find({
       title: { $regex: keyWord, $options: 'i' }
+    }).populate({
+      path: 'categoryId',
+      select: 'name'
     }).sort({ _id: -1 }).select('-storage').skip(skipPage).limit(pageSize)
     const totalCategory = await ProductModel.countDocuments({
       title: { $regex: keyWord, $options: 'i' }
@@ -28,7 +31,10 @@ const getAllProducts = async (req, res) => {
 const getOneProduct = async (req, res) => {
   try {
     const productId = req.params.id
-    const dataProduct = await ProductModel.findById(productId)
+    const dataProduct = await ProductModel.findById(productId).populate({
+      path: 'categoryId',
+      select: 'name'
+    })
     if (!dataProduct) {
       return res.status(404).json({
         status: 'false',
