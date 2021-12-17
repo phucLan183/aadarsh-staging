@@ -1,24 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const typeModelPermission = {
-  type: Array,
-  default: undefined,
-  action: {
-    type: String,
-    upperCase: true,
-    enum: ['GET', 'POST', 'PUT', 'DELETE']
-  }
-}
+const typeModelPermission = [{
+  type: String,
+  enum: ['GET', 'POST', 'PUT', 'DELETE'],
+  default: undefined
+}]
 
 const permission = {
   blog: typeModelPermission,
-  layout: typeModelPermission,
+  upload: typeModelPermission,
   product: typeModelPermission,
   category: typeModelPermission,
   user: typeModelPermission,
   member: typeModelPermission,
-  contact: typeModelPermission,
   message: typeModelPermission,
   question: typeModelPermission,
   review: typeModelPermission,

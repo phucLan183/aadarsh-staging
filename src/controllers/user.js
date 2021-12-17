@@ -20,7 +20,7 @@ const getAllUsers = async (req, res) => {
       _id: {
         $nin: userId
       }
-    }).select(filterDataUser).skip(skipPage).limit(pageSize).lean()
+    }).select(filterDataUser).skip(skipPage).limit(pageSize).sort({ _id: -1 }).lean()
     const totalUser = await UserModel.countDocuments({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },
@@ -99,7 +99,7 @@ const updateUser = async (req, res) => {
     const userId = req.params.id
     const body = req.body
     if (body.password) var hashPassword = await bcrypt.hash(body.password, 10)
-    const dataUserUpdate = await UserModel.findByIdAndUpdate({
+    const dataUserUpdate = await UserModel.findOneAndUpdate({
       _id: userId
     }, {
       $set: {
@@ -113,6 +113,7 @@ const updateUser = async (req, res) => {
         password: hashPassword
       }
     }, {
+      runValidators: true,
       multi: true,
       new: true
     }).select(filterDataUser)

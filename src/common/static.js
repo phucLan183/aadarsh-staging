@@ -1,11 +1,10 @@
 const permissionModules = {
   blog: 'blog',
-  layout: 'layout',
+  upload: 'upload',
   product: 'product',
   category: 'category',
   user: 'user',
   member: 'member',
-  contact: 'contact',
   message: 'message',
   question: 'question',
   review: 'review',
