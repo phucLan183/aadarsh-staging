@@ -49,6 +49,12 @@ const validationUpload = (req, res, next) => {
   })
 }
 
+const validationOrder = (req, res, next) => {
+  authorization(req, res, next, {
+    module: permissionModules.order
+  })
+}
+
 module.exports = {
   validationUser,
   validationReview,
@@ -57,5 +63,6 @@ module.exports = {
   validationMember,
   validationCategory,
   validationProduct,
-  validationUpload
+  validationUpload,
+  validationOrder
 }

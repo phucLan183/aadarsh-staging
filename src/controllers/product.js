@@ -7,13 +7,13 @@ const getAllProducts = async (req, res) => {
     const skipPage = page * pageSize - pageSize
     const keyWord = req.query.keyWord || ''
     const dataProducts = await ProductModel.find({
-      title: { $regex: keyWord, $options: 'i' }
+      name: { $regex: keyWord, $options: 'i' }
     }).populate({
       path: 'categoryId',
       select: 'name'
     }).sort({ _id: -1 }).select('-storage').skip(skipPage).limit(pageSize)
     const totalCategory = await ProductModel.countDocuments({
-      title: { $regex: keyWord, $options: 'i' }
+      name: { $regex: keyWord, $options: 'i' }
     })
     res.status(200).json({
       status: 'success',

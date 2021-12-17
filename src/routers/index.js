@@ -13,6 +13,7 @@ const uploadRoute = require('./server/upload');
 const categoryRoute = require('./server/category');
 const settingRoute = require('./server/setting');
 const productRoute = require('./server/product');
+const orderRoute = require('./server/order');
 
 // Client
 const clientRoute = require('./client');
@@ -30,7 +31,8 @@ const defaultRoutes = [
   categoryRoute,
   settingRoute,
   productRoute,
-  clientRoute
+  clientRoute,
+  orderRoute
 ]
 
 defaultRoutes.forEach((route) => {
