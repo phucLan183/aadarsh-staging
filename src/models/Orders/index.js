@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const typeModelUser = {
+  userId: String,
+  username: String,
+  fullname: String,
+  role: String,
+}
+
 const OrderSchema = new Schema({
   productId: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -19,14 +26,8 @@ const OrderSchema = new Schema({
     type: Array,
     default: undefined
   },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  updatedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
+  createdBy: typeModelUser,
+  updatedBy: typeModelUser,
   notes: {
     type: String,
     trim: true
