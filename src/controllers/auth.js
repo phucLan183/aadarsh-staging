@@ -440,7 +440,6 @@ module.exports = {
   userLogin: userLogin,
   memberLogin: memberLogin,
   userLogout: userLogout,
-  accessToken: accessToken,
   refreshToken: refreshToken,
   forgotPassword: forgotPassword,
   resetPassword: resetPassword,
