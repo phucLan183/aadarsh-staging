@@ -101,7 +101,6 @@ const updateMember = async (req, res) => {
         password: hashPassword
       }
     }, {
-      multi: true,
       new: true
     }).select(filterDataMember)
 

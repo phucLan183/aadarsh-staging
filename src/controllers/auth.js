@@ -70,13 +70,15 @@ const userLogin = async (req, res, next) => {
       userId: checkDataUser._id,
       active: checkDataUser.active,
       permission: checkDataUser.permission,
+      role: 'USER'
     }, config.accessToken, {
       expiresIn: '30m'
     })
 
     const refreshToken = jwt.sign({
       userId: checkDataUser._id,
-      active: checkDataUser.active
+      active: checkDataUser.active,
+      role: 'USER'
     }, config.refreshToken, {
       expiresIn: '7d'
     })
@@ -128,14 +130,16 @@ const memberLogin = async (req, res) => {
     }
     const accessToken = jwt.sign({
       userId: checkDataMember._id,
-      active: checkDataMember.active
+      active: checkDataMember.active,
+      role: 'MEMBER'
     }, config.accessToken, {
       expiresIn: '30m'
     })
 
     const refreshToken = jwt.sign({
       userId: checkDataMember._id,
-      active: checkDataMember.active
+      active: checkDataMember.active,
+      role: 'MEMBER'
     }, config.refreshToken, {
       expiresIn: '7d'
     })
@@ -164,98 +168,93 @@ const memberLogin = async (req, res) => {
   }
 }
 
-const memberLogout = async (req, res, decode) => {
-  try {
-    const dataUser = await MemberModel.findByIdAndUpdate({
-      _id: decode.userId
-    }, {
-      $set: {
-        refreshToken: []
-      }
-    })
-    if (!dataUser) {
-      return res.status(400).json({
-        status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
-      })
-    }
-    res.status(200).json({
-      success: "success",
-    })
-  } catch (error) {
-    res.status(500).json({
-      status: 'false',
-      message: error.message,
-    })
-  }
-}
-
 const userLogout = async (req, res) => {
   try {
     const authHeader = req.headers['x-token']
     const token = authHeader && authHeader.split(' ')[1]
     const decode = jwt.decode(token)
-    const dataUser = await UserModel.findByIdAndUpdate({
-      _id: decode.userId
-    }, {
-      $set: {
-        refreshToken: []
-      }
-    })
-    if (!dataUser) {
-      return memberLogout(req, res, decode)
+    if (decode.role === 'USER') {
+      const dataUser = await UserModel.updateOne({
+        _id: decode.userId
+      }, {
+        $set: {
+          refreshToken: []
+        }
+      })
+      return res.status(200).json({
+        success: "success",
+      })
     }
-    res.status(200).json({
-      success: "success",
-    })
+
+    if (decode.role === 'MEMBER') {
+      const dataUser = await MemberModel.findByIdAndUpdate({
+        _id: decode.userId
+      }, {
+        $set: {
+          refreshToken: []
+        }
+      })
+      return res.status(200).json({
+        success: "success",
+      })
+    }
   } catch (error) {
     res.status(500).json({
       status: 'false',
       message: error.message,
-    })
-  }
-}
-
-const accessToken = async (req, res) => {
-  if (req.user.userId) {
-    res.json({
-      status: 'success'
-    })
-  } else {
-    res.json({
-      status: 'false'
     })
   }
 }
 
 const refreshToken = async (req, res) => {
   try {
-    const { userId, refreshToken } = req.user
-    if (refreshToken === null) {
-      return res.sendStatus(401)
+    const { userId, refreshToken, role } = req.user
+    if (refreshToken === null && role === null) return res.sendStatus(401)
+    if (role === 'USER') {
+      const dataUser = await UserModel.findOne({
+        _id: userId
+      }).select('active permission refreshToken').lean()
+
+      const storageRefreshToken = dataUser.refreshToken
+
+      if (!storageRefreshToken.includes(refreshToken)) return res.sendStatus(401)
+
+      const accessToken = jwt.sign({
+        userId: dataUser._id,
+        active: dataUser.active,
+        permission: dataUser.permission,
+        role: 'USER'
+      }, config.accessToken, {
+        expiresIn: "30m"
+      })
+
+      res.status(200).json({
+        status: "success",
+        act: accessToken,
+      })
     }
-    const dataUser = await UserModel.findOne({
-      _id: userId
-    }).select('active permission refreshToken').lean()
+    if (role === 'MEMBER') {
+      const dataMember = await MemberModel.findOne({
+        _id: userId
+      }).select('active refreshToken').lean()
 
-    const storageRefreshToken = dataUser.refreshToken
+      const storageRefreshToken = dataMember.refreshToken
 
-    if (!storageRefreshToken.includes(refreshToken)) {
-      return res.sendStatus(401)
+      if (!storageRefreshToken.includes(refreshToken)) return res.sendStatus(401)
+
+      const accessToken = jwt.sign({
+        userId: dataMember._id,
+        active: dataMember.active,
+        role: 'MEMBER'
+      }, config.accessToken, {
+        expiresIn: "30m"
+      })
+
+      res.status(200).json({
+        status: "success",
+        act: accessToken,
+      })
     }
-
-    const accessToken = jwt.sign({
-      userId: dataUser._id,
-      active: dataUser.active,
-      permission: dataUser.permission
-    }, config.accessToken, {
-      expiresIn: "30m"
-    })
-
-    res.status(200).json({
-      status: "success",
-      act: accessToken,
-    })
   } catch (error) {
     res.status(500).json({
       status: 'false',
@@ -337,20 +336,97 @@ const resetPassword = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
   try {
-    const currentUserId = req.user.userId
+    const { userId, role } = req.user
     const selectData = '-refreshToken -createdAt -updatedAt -__v -password'
-    const dataUser = await UserModel.findById({ _id: currentUserId }).select(selectData).lean()
-    if (!dataUser) {
-      const dataMember = await MemberModel.findById({ _id: currentUserId }).select(selectData).lean()
+    if (role === 'USER') {
+      const dataUser = await UserModel.findById({ _id: userId }).select(selectData).lean()
+      return res.status(200).json({
+        status: 'success',
+        data: dataUser
+      })
+    }
+    if (role === 'MEMBER') {
+      const dataMember = await MemberModel.findById({ _id: userId }).select(selectData).lean()
       return res.status(200).json({
         status: 'success',
         data: dataMember
       })
     }
-    res.status(200).json({
-      status: 'success',
-      data: dataUser
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message,
     })
+  }
+}
+
+const putCurrentUser = async (req, res) => {
+  try {
+    const { userId, role } = req.user
+    const body = req.body
+    const filterData = '-refreshToken -createdAt -updatedAt -__v -password'
+    if (role === 'USER') {
+      if (body.password) var hashPassword = await bcrypt.hash(body.password, 10)
+      const dataUserUpdate = await UserModel.findOneAndUpdate({
+        _id: userId
+      }, {
+        $set: {
+          username: body.username,
+          email: body.email,
+          permission: body.permission,
+          fullname: body.fullname,
+          phoneNumber: body.phoneNumber,
+          active: body.active,
+          avatar: body.avatar,
+          password: hashPassword
+        }
+      }, {
+        runValidators: true,
+        new: true
+      }).select(filterData)
+
+      if (!dataUserUpdate) {
+        return res.status(400).json({
+          status: 'false',
+          message: 'Không tìm thấy dữ liệu!'
+        })
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: dataUserUpdate
+      })
+    }
+    if (role === 'MEMBER') {
+      if (body.password) var hashPassword = await bcrypt.hash(body.password, 10)
+      const dataMemberUpdate = await MemberModel.findByIdAndUpdate({
+        _id: userId
+      }, {
+        $set: {
+          username: body.username,
+          email: body.email,
+          fullname: body.fullname,
+          phoneNumber: body.phoneNumber,
+          active: body.active,
+          avatar: body.avatar,
+          password: hashPassword
+        }
+      }, {
+        new: true
+      }).select(filterData)
+
+      if (!dataMemberUpdate) {
+        return res.status(400).json({
+          status: 'false',
+          message: 'Không tìm thấy dữ liệu!'
+        })
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: dataMemberUpdate
+      })
+    }
   } catch (error) {
     res.status(500).json({
       status: 'false',
@@ -368,5 +444,6 @@ module.exports = {
   refreshToken: refreshToken,
   forgotPassword: forgotPassword,
   resetPassword: resetPassword,
-  getCurrentUser: getCurrentUser
+  getCurrentUser: getCurrentUser,
+  putCurrentUser: putCurrentUser
 }
