@@ -52,7 +52,7 @@ const register = async (req, res) => {
   }
 }
 
-const userLogin = async (req, res, next) => {
+const userLogin = async (req, res) => {
   try {
     const { username, password } = req.body
     const checkDataUser = await UserModel.findOne({
@@ -60,11 +60,17 @@ const userLogin = async (req, res, next) => {
       active: true
     }).lean()
     if (!checkDataUser) {
-      return next()
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+      })
     }
     const comparePass = await bcrypt.compare(password, checkDataUser.password)
     if (!comparePass) {
-      return next()
+      return res.status(400).json({
+        status: 'false',
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+      })
     }
     const accessToken = jwt.sign({
       userId: checkDataUser._id,

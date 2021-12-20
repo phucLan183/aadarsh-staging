@@ -4,7 +4,8 @@ const { authenticateToken, authenticateRefreshToken, authenticateResetToken } = 
 const authController = require('../../controllers/auth');
 
 router.post('/auth/register', authController.register)
-router.post('/auth/login', authController.userLogin, authController.memberLogin)
+router.post('/auth/user-login', authController.userLogin)
+router.post('/auth/member-login', authController.memberLogin)
 router.delete('/auth/logout', authController.userLogout)
 
 router.post('/auth/refresh-token', authenticateRefreshToken, authController.refreshToken)
