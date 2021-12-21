@@ -8,7 +8,7 @@ const getAllCategories = async (req, res) => {
     const keyWord = req.query.keyWord || ''
     const dataCategory = await CategoryModel.find({
       name: { $regex: keyWord, $options: 'i' }
-    }).sort({ _id: -1 }).select('-storage').skip(skipPage).limit(pageSize)
+    }).sort({ _id: -1 }).skip(skipPage).limit(pageSize)
     const totalCategory = await CategoryModel.countDocuments({
       name: { $regex: keyWord, $options: 'i' }
     })

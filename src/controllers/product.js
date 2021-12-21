@@ -11,7 +11,7 @@ const getAllProducts = async (req, res) => {
     }).populate({
       path: 'categoryId',
       select: 'name'
-    }).sort({ _id: -1 }).select('-storage').skip(skipPage).limit(pageSize)
+    }).sort({ _id: -1 }).skip(skipPage).limit(pageSize)
     const totalCategory = await ProductModel.countDocuments({
       name: { $regex: keyWord, $options: 'i' }
     })
