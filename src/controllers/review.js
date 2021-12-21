@@ -1,6 +1,6 @@
 const ReviewModel = require('../models/Reviews');
 
-const filterDataReview = 'fullname star content createdAt'
+const filterDataReview = 'fullname star content createdAt createdDate'
 
 const getAllReviews = async (req, res) => {
   try {
