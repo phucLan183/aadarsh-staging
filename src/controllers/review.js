@@ -62,11 +62,12 @@ const getOneReview = async (req, res) => {
 
 const createReview = async (req, res) => {
   try {
-    const { fullname, star, content } = req.body
+    const { fullname, star, content, createdDate } = req.body
     const newReview = new ReviewModel({
       fullname: fullname,
       star: star,
-      content: content
+      content: content,
+      createdDate: createdDate,
     })
     const dataReview = await newReview.save()
 
@@ -91,14 +92,15 @@ const createReview = async (req, res) => {
 const updateReview = async (req, res) => {
   try {
     const reviewId = req.params.reviewId
-    const { fullname, star, content } = req.body
+    const { fullname, star, content, createdDate } = req.body
     const dataReview = await ReviewModel.findByIdAndUpdate({
       _id: reviewId,
     }, {
       $set: {
         fullname: fullname,
         star: star,
-        content: content
+        content: content,
+        createdDate: createdDate,
       }
     }, {
       new: true
@@ -107,7 +109,7 @@ const updateReview = async (req, res) => {
     if (!dataReview) {
       return res.status(400).json({
         status: 'false',
-        message: 'ReviewId not found'
+        message: 'Không tìm thấy dữ liệu!'
       })
     }
     res.status(200).json({

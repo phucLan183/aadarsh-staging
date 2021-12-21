@@ -14,6 +14,10 @@ const ReviewSchema = new Schema({
   content: {
     type: String,
     required: true,
+  },
+  createdDate: {
+    type: Date,
+    required: true,
   }
 }, {
   timestamps: true
