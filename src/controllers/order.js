@@ -231,6 +231,45 @@ const getOneOrderCurrentUser = async (req, res) => {
   }
 }
 
+const updateOrderMember = async (req, res) => {
+  try {
+    const orderId = req.params.id
+    const body = req.body
+    const { userId, role } = req.user
+    const dataMember = await MemberModel.findById(userId).select('username fullname').lean()
+    const dataOrder = await OrderModel.findOneAndUpdate({
+      _id: orderId,
+      'createdBy.userId': userId
+    }, {
+      $set: {
+        attachment: body.attachment,
+        notes: body.notes,
+        updatedBy: {
+          userId: dataMember._id,
+          username: dataMember.username,
+          fullname: dataMember.fullname,
+          role: role
+        }
+      }
+    })
+    if (!dataOrder) {
+      return res.status(404).json({
+        status: 'false',
+        message: 'Không tìm thấy dữ liệu!'
+      })
+    }
+    res.status(200).json({
+      status: 'success',
+      data: dataOrder
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'false',
+      message: error.message
+    })
+  }
+}
+
 module.exports = {
   getAllOrders: getAllOrders,
   getOneOrder: getOneOrder,
@@ -238,5 +277,6 @@ module.exports = {
   updateOrder: updateOrder,
   deleteOrder: deleteOrder,
   getOrdersCurrentUser: getOrdersCurrentUser,
-  getOneOrderCurrentUser: getOneOrderCurrentUser
+  getOneOrderCurrentUser: getOneOrderCurrentUser,
+  updateOrderMember: updateOrderMember
 }
