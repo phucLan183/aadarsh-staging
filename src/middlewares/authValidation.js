@@ -44,9 +44,14 @@ const validationProduct = (req, res, next) => {
 }
 
 const validationUpload = (req, res, next) => {
-  authorization(req, res, next, {
-    module: permissionModules.upload
-  })
+  const nameFolder = req.body.folder
+  if (nameFolder === 'attachments' || nameFolder === 'messages') {
+    next()
+  } else {
+    authorization(req, res, next, {
+      module: permissionModules.upload
+    })
+  }
 }
 
 const validationOrder = (req, res, next) => {

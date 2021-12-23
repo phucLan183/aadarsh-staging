@@ -26,8 +26,9 @@ const getAllImages = async (req, res) => {
 const createImage = async (req, res) => {
   try {
     const image = req.file.path
+    const nameFolder = req.body.folder
     const uploadImageIntoCloud = await cloudinary.uploader.upload(image, {
-      folder: 'images'
+      folder: nameFolder
     })
     const dataImage = new ImageModel({
       urlImage: uploadImageIntoCloud.secure_url,

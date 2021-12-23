@@ -6,9 +6,9 @@ const uploadImage = require('../../utils/multer');
 const uploadController = require('../../controllers/upload');
 
 router.get('/upload/images', authenticateToken, validationUpload, uploadController.getAllImages)
-router.post('/upload/images', authenticateToken, validationUpload, uploadImage.single('image'), uploadController.createImage)
+router.post('/upload/images', authenticateToken, uploadImage.single('image'), validationUpload, uploadController.createImage)
 router.get('/upload/image/:id', authenticateToken, validationUpload, uploadController.getOneImage)
-router.put('/upload/image/:id', authenticateToken, validationUpload, uploadImage.single('image'), uploadController.updateImage)
+router.put('/upload/image/:id', authenticateToken, uploadImage.single('image'), validationUpload, uploadController.updateImage)
 router.delete('/upload/image/:id', authenticateToken, validationUpload, uploadController.deleteImage)
 
 module.exports = router
