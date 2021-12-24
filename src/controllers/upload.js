@@ -6,10 +6,15 @@ const getAllImages = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
-    const dataImage = await ImageModel.find().sort({
+    const folder = req.query.folder
+    const dataImage = await ImageModel.find({
+      folder: folder
+    }).sort({
       "_id": -1
     }).select('-updatedAt').skip(skipPage).limit(pageSize).lean()
-    const totalImage = await ImageModel.countDocuments()
+    const totalImage = await ImageModel.countDocuments({
+      folder: folder
+    })
     res.status(200).json({
       status: 'success',
       data: dataImage,
@@ -26,13 +31,14 @@ const getAllImages = async (req, res) => {
 const createImage = async (req, res) => {
   try {
     const image = req.file.path
-    const nameFolder = req.body.folder
+    const folder = req.query.folder
     const uploadImageIntoCloud = await cloudinary.uploader.upload(image, {
-      folder: nameFolder
+      folder: folder
     })
     const dataImage = new ImageModel({
       urlImage: uploadImageIntoCloud.secure_url,
-      publicIdImage: uploadImageIntoCloud.public_id
+      publicIdImage: uploadImageIntoCloud.public_id,
+      folder: folder
     })
     const saveData = await dataImage.save()
     res.status(200).json({
@@ -83,10 +89,13 @@ const updateImage = async (req, res) => {
         message: 'Không tìm thấy dữ liệu!'
       })
     }
+
     const updateImageIntoCloud = await cloudinary.uploader.upload(currentImage, {
       public_id: checkDataImage.publicIdImage,
-      overwrite: true
+      overwrite: true,
+      invalidate: true
     })
+
     const updateDataImage = await ImageModel.findByIdAndUpdate({
       _id: imageId
     }, {

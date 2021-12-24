@@ -8,6 +8,11 @@ const ImageSchema = new Schema({
   publicIdImage: {
     type: String,
     required: true
+  },
+  folder: {
+    type: String,
+    required: true,
+    lowercase: true
   }
 }, {
   timestamps: true,
