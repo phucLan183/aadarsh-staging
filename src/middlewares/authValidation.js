@@ -44,8 +44,8 @@ const validationProduct = (req, res, next) => {
 }
 
 const validationUpload = (req, res, next) => {
-  const nameFolder = req.body.folder
-  if (nameFolder === 'attachments' || nameFolder === 'messages') {
+  const folder = req.query.folder
+  if (folder === 'attachments' || folder === 'messages') {
     next()
   } else {
     authorization(req, res, next, {
