@@ -4,6 +4,7 @@ const compression = require('compression');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const config = require('./config');
+
 require('dotenv').config();
 const app = express();
 
@@ -32,6 +33,9 @@ app.use(cors())
 const indexRouter = require('./routers')
 app.use(indexRouter)
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log(`Server started in port: ${config.port}`);
 })
+
+const ConnectChat = require('./socketIO')
+ConnectChat(server)

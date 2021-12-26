@@ -60,6 +60,12 @@ const validationOrder = (req, res, next) => {
   })
 }
 
+const validationMessage = (req, res, next) => {
+  authorization(req, res, next, {
+    module: permissionModules.message
+  })
+}
+
 module.exports = {
   validationUser,
   validationReview,
@@ -69,5 +75,6 @@ module.exports = {
   validationCategory,
   validationProduct,
   validationUpload,
-  validationOrder
+  validationOrder,
+  validationMessage
 }
