@@ -13,7 +13,10 @@ const getAllRooms = async (req, res) => {
         { name: { $regex: keyWord, $options: 'i' }, userId: userId },
         { name: { $regex: keyWord, $options: 'i' }, memberId: userId }
       ]
-    }).skip(skipPage).limit(pageSize)
+    }).populate([
+      { path: 'memberId', select: 'username fullname avatar' },
+      { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
+    ]).select('-userId').skip(skipPage).limit(pageSize)
     const totalRoom = await RoomModel.countDocuments({
       $or: [
         { name: { $regex: keyWord, $options: 'i' }, userId: userId },
@@ -36,7 +39,7 @@ const getAllRooms = async (req, res) => {
 const getRoomId = async (req, res) => {
   try {
     const roomId = req.params.id
-    const dataRoom = await RoomModel.findById(roomId).lean()
+    const dataRoom = await RoomModel.findById(roomId).populate({ path: 'memberId', select: 'username fullname email' }).lean()
     if (!dataRoom) {
       return res.status(404).json({
         status: 'false',
@@ -84,7 +87,10 @@ const getAllMessages = async (req, res) => {
     const roomId = req.query.roomId
     const dataMessage = await MessageModel.find({
       roomId: roomId
-    }).skip(skipPage).limit(pageSize)
+    }).populate([
+      { path: 'memberId', select: 'username fullname avatar' },
+      { path: 'userId', select: 'username fullname avatar' }
+    ]).skip(skipPage).limit(pageSize)
     const totalMessage = await MessageModel.countDocuments({
       roomId: roomId
     })

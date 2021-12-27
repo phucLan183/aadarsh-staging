@@ -6,6 +6,10 @@ const RoomSchema = new Schema({
     type: String,
     default: null,
   },
+  lastMessage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Message',
+  },
   userId: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

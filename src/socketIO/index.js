@@ -43,12 +43,14 @@ module.exports = (server) => {
       socket.emit('START_CONVERSATION_SUCCESS', room);
     })
 
-    socket.on('SEND_MESSAGE', async ({ roomId, userId, memberId, message }) => {
+    socket.on('SEND_MESSAGE', async ({ roomId, userId, memberId, text, image, type }) => {
       let newMessage
 
       if (userId) {
         newMessage = await new MessageModel({
-          text: message,
+          text: text,
+          image: image,
+          type: type,
           userId: userId,
           roomId: roomId
         }).save()
@@ -56,11 +58,21 @@ module.exports = (server) => {
 
       if (memberId) {
         newMessage = await new MessageModel({
-          text: message,
+          text: text,
+          image: image,
+          type: type,
           memberId: memberId,
           roomId: roomId
         }).save()
       }
+
+      await RoomModel.findByIdAndUpdate({
+        _id: roomId,
+      }, {
+        $set: {
+          lastMessage: newMessage._id
+        }
+      })
 
       socket.emit('RECEIVER_MESSAGE', { newMessage })
     })

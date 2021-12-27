@@ -7,9 +7,14 @@ const MessageSchema = new Schema({
     trim: true,
     default: null
   },
-  image: {
+  image: [{
     type: String,
     trim: true
+  }],
+  type: {
+    type: String,
+    enum: ['TEXT', 'IMAGE', 'THUMB_UP'],
+    required: true
   },
   roomId: {
     type: mongoose.Schema.Types.ObjectId,
