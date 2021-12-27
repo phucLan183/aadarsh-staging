@@ -5,7 +5,12 @@ const UserModel = require('../models/Users');
 const MemberModel = require('../models/Members');
 
 module.exports = (server) => {
-  const io = socketIO(server)
+  const io = socketIO(server, {
+    cors: {
+      methods: ["GET", "POST"],
+      credentials: true
+    }
+  })
 
   io.on('connection', (socket) => {
 

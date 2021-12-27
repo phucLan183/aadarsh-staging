@@ -124,14 +124,14 @@ const memberLogin = async (req, res) => {
     if (!checkDataMember) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+        message: 'Username or Password is incorrect. Please try again!',
       })
     }
     const comparePass = await bcrypt.compare(password, checkDataMember.password)
     if (!comparePass) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+        message: 'Username or Password is incorrect. Please try again!',
       })
     }
     const accessToken = jwt.sign({
