@@ -21,22 +21,19 @@ module.exports = (server) => {
     })
 
     socket.on('START_CONVERSATION', async ({ memberId }) => {
-      const dataUser = await UserModel.find({
-        active: true,
-        'permission.message': {
-          $all: ["GET", "POST", "PUT", "DELETE"]
-        }
-      }).select('id')
-      const newDataUser = dataUser.map((user) => user.id)
       let room
-      room = await RoomModel.find({
-        memberId: memberId
-      }).populate([
+      room = await RoomModel.findById(memberId).populate([
         { path: 'memberId', select: 'username email fullname avatar updatedAt' },
         { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
       ]).select('-userId');
-
       if (room.length === 0) {
+        const dataUser = await UserModel.find({
+          active: true,
+          'permission.message': {
+            $all: ["GET", "POST", "PUT", "DELETE"]
+          }
+        }).select('id')
+        const newDataUser = dataUser.map((user) => user.id)
         const dataMember = await MemberModel.findById(memberId).select('username')
         room = await new RoomModel({
           name: dataMember.username,
