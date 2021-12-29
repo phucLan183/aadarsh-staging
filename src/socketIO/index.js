@@ -32,7 +32,7 @@ module.exports = (server) => {
       room = await RoomModel.find({
         memberId: memberId
       }).populate([
-        { path: 'memberId', select: 'username email fullname avatar' },
+        { path: 'memberId', select: 'username email fullname avatar updatedAt' },
         { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
       ]).select('-userId');
 
