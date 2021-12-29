@@ -7,7 +7,7 @@ const MemberModel = require('../models/Members');
 module.exports = (server) => {
   const io = socketIO(server, {
     cors: {
-      origin: "*:*",
+      origin: "http://localhost:3000",
       methods: ["GET", "POST"],
       credentials: true
     }
