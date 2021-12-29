@@ -14,7 +14,7 @@ const getAllRooms = async (req, res) => {
         { name: { $regex: keyWord, $options: 'i' }, memberId: userId }
       ]
     }).populate([
-      { path: 'memberId', select: 'username fullname avatar' },
+      { path: 'memberId', select: 'username fullname avatar email updatedAt' },
       { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
     ]).select('-userId').skip(skipPage).limit(pageSize)
     const totalRoom = await RoomModel.countDocuments({
@@ -39,7 +39,7 @@ const getAllRooms = async (req, res) => {
 const getRoomId = async (req, res) => {
   try {
     const roomId = req.params.id
-    const dataRoom = await RoomModel.findById(roomId).populate({ path: 'memberId', select: 'username fullname email' }).lean()
+    const dataRoom = await RoomModel.findById(roomId).populate({ path: 'memberId', select: 'username fullname email updatedAt' }).lean()
     if (!dataRoom) {
       return res.status(404).json({
         status: 'false',

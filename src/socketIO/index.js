@@ -31,7 +31,11 @@ module.exports = (server) => {
       let room
       room = await RoomModel.find({
         memberId: memberId
-      })
+      }).populate([
+        { path: 'memberId', select: 'username email fullname avatar' },
+        { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
+      ]).select('-userId');
+
       if (room.length === 0) {
         const dataMember = await MemberModel.findById(memberId).select('username')
         room = await new RoomModel({
