@@ -70,6 +70,11 @@ module.exports = (server) => {
         }).save()
       }
 
+      const newMessageReceiver = await MessageModel.findById(newMessage._id).populate([
+        { path: 'memberId', select: 'username fullname avatar' },
+        { path: 'userId', select: 'username fullname avatar' }
+      ])
+
       await RoomModel.findByIdAndUpdate({
         _id: roomId,
       }, {
@@ -78,7 +83,7 @@ module.exports = (server) => {
         }
       })
 
-      socket.emit('RECEIVER_MESSAGE', { newMessage })
+      socket.emit('RECEIVER_MESSAGE', { newMessage: newMessageReceiver })
     })
   })
 }
