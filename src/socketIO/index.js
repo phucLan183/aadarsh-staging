@@ -47,6 +47,32 @@ module.exports = (server) => {
       socket.emit('START_CONVERSATION_SUCCESS', room);
     })
 
+    socket.on('SEEN_CONVERSATION', async ({ roomId }) => {
+      const dataRoom = await RoomModel.findByIdAndUpdate({
+        _id: roomId,
+      }, {
+        $set: {
+          seen: true
+        }
+      }, {
+        new: true
+      }).select('-userId -memberId')
+      socket.emit('SEEN_CONVERSATION_SUCCESS', dataRoom)
+    })
+
+    socket.on('MARK_UNSEEN_CONVERSATION', async ({ roomId }) => {
+      const dataRoom = await RoomModel.findByIdAndUpdate({
+        _id: roomId,
+      }, {
+        $set: {
+          seen: false
+        }
+      }, {
+        new: true
+      }).select('-userId -memberId')
+      socket.emit('MARK_UNSEEN_CONVERSATION_SUCCESS', dataRoom)
+    })
+
     socket.on('SEND_MESSAGE', async ({ roomId, userId, memberId, text, image, type }) => {
       let newMessage
 
@@ -79,7 +105,8 @@ module.exports = (server) => {
         _id: roomId,
       }, {
         $set: {
-          lastMessage: newMessage._id
+          lastMessage: newMessage._id,
+          seen: false
         }
       })
 

@@ -16,7 +16,7 @@ const getAllRooms = async (req, res) => {
     }).populate([
       { path: 'memberId', select: 'username fullname avatar email updatedAt' },
       { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
-    ]).select('-userId').skip(skipPage).limit(pageSize)
+    ]).select('-userId').skip(skipPage).limit(pageSize).sort({ _id: -1})
     const totalRoom = await RoomModel.countDocuments({
       $or: [
         { name: { $regex: keyWord, $options: 'i' }, userId: userId },
@@ -90,7 +90,7 @@ const getAllMessages = async (req, res) => {
     }).populate([
       { path: 'memberId', select: 'username fullname avatar' },
       { path: 'userId', select: 'username fullname avatar' }
-    ]).skip(skipPage).limit(pageSize)
+    ]).skip(skipPage).limit(pageSize).sort({ _id: -1 })
     const totalMessage = await MessageModel.countDocuments({
       roomId: roomId
     })

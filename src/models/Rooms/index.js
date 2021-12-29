@@ -6,6 +6,11 @@ const RoomSchema = new Schema({
     type: String,
     default: null,
   },
+  seen:{
+    type: Boolean,
+    default: false,
+    required: true
+  },
   lastMessage: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Message',
