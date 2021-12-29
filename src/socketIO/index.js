@@ -22,7 +22,9 @@ module.exports = (server) => {
 
     socket.on('START_CONVERSATION', async ({ memberId }) => {
       let room
-      room = await RoomModel.findById(memberId).populate([
+      room = await RoomModel.findOne({
+        memberId: memberId
+      }).populate([
         { path: 'memberId', select: 'username email fullname avatar updatedAt' },
         { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
       ]).select('-userId');
