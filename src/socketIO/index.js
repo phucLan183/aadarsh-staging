@@ -26,7 +26,7 @@ module.exports = (server) => {
         { path: 'memberId', select: 'username email fullname avatar updatedAt' },
         { path: 'lastMessage', select: 'text createdAt memberId userId type', populate: [{ path: 'userId', select: 'username fullname avatar' }] }
       ]).select('-userId');
-      if (room.length === 0) {
+      if (!room) {
         const dataUser = await UserModel.find({
           active: true,
           'permission.message': {
