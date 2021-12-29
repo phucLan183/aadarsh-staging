@@ -37,11 +37,14 @@ module.exports = (server) => {
         }).select('id')
         const newDataUser = dataUser.map((user) => user.id)
         const dataMember = await MemberModel.findById(memberId).select('username')
-        room = await new RoomModel({
+        const newRoom = await new RoomModel({
           name: dataMember.username,
           userId: newDataUser,
           memberId: memberId
         }).save()
+        room = await RoomModel.findById(newRoom._id).populate({
+          path: 'memberId', select: 'username email fullname avatar updatedAt'
+        }).select('-userId');
       }
       socket.emit('START_CONVERSATION_SUCCESS', room);
     })
