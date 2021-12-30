@@ -103,7 +103,11 @@ module.exports = (server) => {
         { path: 'userId', select: 'username fullname avatar email' },
         {
           path: 'roomId',
-          select: 'name seen memberId createdAt updatedAt',
+          select: 'name seen createdAt updatedAt',
+          populate: {
+            path: 'memberId',
+            select: 'username fullname avatar email',
+          }
         }
       ])
 
