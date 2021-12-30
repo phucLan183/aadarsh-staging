@@ -99,18 +99,20 @@ module.exports = (server) => {
       }
 
       const newMessageReceiver = await MessageModel.findById(newMessage._id).populate([
-        { path: 'memberId', select: 'username fullname avatar' },
-        { path: 'userId', select: 'username fullname avatar' }
+        { path: 'memberId', select: 'username fullname avatar email updatedAt' },
+        { path: 'roomId', select: 'name seen lastMessage createdAt updatedAt', populate: { path: 'lastMessage', select: 'text createdAt userId type', populate: { path: 'userId', select: 'username fullname avatar' }}}
       ])
 
-      await RoomModel.findByIdAndUpdate({
-        _id: roomId,
-      }, {
-        $set: {
-          lastMessage: newMessage._id,
-          seen: false
-        }
-      })
+      if (!newMessageReceiver.userId) {
+        await RoomModel.findByIdAndUpdate({
+          _id: roomId,
+        }, {
+          $set: {
+            lastMessage: newMessage._id,
+            seen: false
+          }
+        })
+      }
 
       socket.emit('RECEIVER_MESSAGE', { newMessage: newMessageReceiver })
     })
