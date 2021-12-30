@@ -286,19 +286,19 @@ const forgotPassword = async (req, res) => {
       expiresIn: "3m"
     })
 
-    // const message = {
-    //   to: email,
-    //   subject: "Thay đổi mật khẩu",
-    //   html: `<h3>CLICK A LINK TO RESET PASSWORD</h3>
-    //          <a href="https://aadarsh-staging.netlify.app/reset-password/${resetToken}">GET OVER HERE</a><br/>`
-    // }
-    // const sendMail = await transporter.sendMail(message)
-    // if (!sendMail) {
-    //   return res.status(400).json({
-    //     status: 'false',
-    //     message: 'Can not send mail'
-    //   })
-    // }
+    const message = {
+      to: email,
+      subject: "Thay đổi mật khẩu",
+      html: `<h3>CLICK A LINK TO RESET PASSWORD</h3>
+             <a href="https://aadarsh-staging.netlify.app/reset-password/${resetToken}">GET OVER HERE</a><br/>`
+    }
+    const sendMail = await transporter.sendMail(message)
+    if (!sendMail) {
+      return res.status(400).json({
+        status: 'false',
+        message: 'Can not send mail'
+      })
+    }
     res.status(200).json({
       status: 'success',
       resetToken: resetToken
