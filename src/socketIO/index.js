@@ -104,10 +104,13 @@ module.exports = (server) => {
         {
           path: 'roomId',
           select: 'name seen lastMessage createdAt updatedAt',
-          populate:{
+          populate: {
             path: 'lastMessage',
             select: 'text createdAt memberId userId type image',
-            populate: { path: 'userId', select: 'username fullname avatar email' }
+            populate: [
+              { path: 'userId', select: 'username fullname avatar email' },
+              { path: 'memberId', select: 'username fullname avatar email' },
+            ],
           }
         }
       ])
