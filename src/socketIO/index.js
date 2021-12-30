@@ -112,16 +112,14 @@ module.exports = (server) => {
         }
       ])
 
-      if (!newMessageReceiver.userId) {
-        await RoomModel.findByIdAndUpdate({
-          _id: roomId,
-        }, {
-          $set: {
-            lastMessage: newMessage._id,
-            seen: false
-          }
-        })
-      }
+
+      await RoomModel.findByIdAndUpdate({
+        _id: roomId,
+      }, {
+        $set: newMessageReceiver.userId
+          ? { lastMessage: newMessage._id }
+          : { lastMessage: newMessage._id, seen: false }
+      })
 
       socket.emit('RECEIVER_MESSAGE', { newMessage: newMessageReceiver })
     })
