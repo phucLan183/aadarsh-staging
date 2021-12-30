@@ -99,8 +99,17 @@ module.exports = (server) => {
       }
 
       const newMessageReceiver = await MessageModel.findById(newMessage._id).populate([
-        { path: 'memberId', select: 'username fullname avatar email updatedAt' },
-        { path: 'roomId', select: 'name seen lastMessage createdAt updatedAt', populate: { path: 'lastMessage', select: 'text createdAt userId type', populate: { path: 'userId', select: 'username fullname avatar' }}}
+        { path: 'memberId', select: 'username fullname avatar email' },
+        { path: 'userId', select: 'username fullname avatar email' },
+        {
+          path: 'roomId',
+          select: 'name seen lastMessage createdAt updatedAt',
+          populate:{
+            path: 'lastMessage',
+            select: 'text createdAt memberId userId type image',
+            populate: { path: 'userId', select: 'username fullname avatar email' }
+          }
+        }
       ])
 
       if (!newMessageReceiver.userId) {
