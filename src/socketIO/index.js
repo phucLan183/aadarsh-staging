@@ -7,8 +7,7 @@ const MemberModel = require('../models/Members');
 module.exports = (server) => {
   const io = socketIO(server, {
     cors: {
-      // origin: "https://aadarsh-staging.netlify.app",
-      origin: "http://localhost:3000",
+      origin: env.ROOT_URL,
       methods: ["GET", "POST"],
       credentials: true
     }
