@@ -120,7 +120,7 @@ module.exports = (server) => {
           : { lastMessage: newMessage._id, seen: false }
       })
 
-      socket.emit('RECEIVER_MESSAGE', { newMessage: newMessageReceiver })
+      io.sockets.emit('RECEIVER_MESSAGE', { newMessage: newMessageReceiver });
     })
   })
 }

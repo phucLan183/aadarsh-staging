@@ -15,7 +15,7 @@ const getAllMembers = async (req, res) => {
         { email: { $regex: keyWord, $options: 'i' } },
         { phoneNumber: { $regex: keyWord, $options: 'i' } }
       ]
-    }).select(filterDataMember).skip(skipPage).limit(pageSize).lean()
+    }).select(filterDataMember).skip(skipPage).limit(pageSize).sort({ createdAt: -1 }).lean()
     const totalMember = await MemberModel.countDocuments({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },

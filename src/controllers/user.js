@@ -20,7 +20,7 @@ const getAllUsers = async (req, res) => {
       _id: {
         $nin: userId
       }
-    }).select(filterDataUser).skip(skipPage).limit(pageSize).sort({ _id: -1 }).lean()
+    }).select(filterDataUser).skip(skipPage).limit(pageSize).sort({ createdAt: -1 }).lean()
     const totalUser = await UserModel.countDocuments({
       $or: [
         { fullname: { $regex: keyWord, $options: 'i' } },
