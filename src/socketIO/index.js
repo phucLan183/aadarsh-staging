@@ -4,10 +4,10 @@ const MessageModel = require('../models/Messages');
 const UserModel = require('../models/Users');
 const MemberModel = require('../models/Members');
 
-module.exports = (server) => {
+module.exports = (server, url) => {
   const io = socketIO(server, {
     cors: {
-      origin: env.ROOT_URL,
+      origin: url,
       methods: ["GET", "POST"],
       credentials: true
     }

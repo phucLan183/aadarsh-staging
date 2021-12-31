@@ -8,7 +8,8 @@ const permissionModules = {
   message: 'message',
   question: 'question',
   review: 'review',
-  order: 'order'
+  order: 'order',
+  contact: 'contact'
 }
 
 const blockType = {

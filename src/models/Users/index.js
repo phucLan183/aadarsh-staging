@@ -17,7 +17,8 @@ const permission = {
   message: typeModelPermission,
   question: typeModelPermission,
   review: typeModelPermission,
-  order: typeModelPermission
+  order: typeModelPermission,
+  contact: typeModelPermission
 }
 
 const UserSchema = new Schema({

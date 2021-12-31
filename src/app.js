@@ -38,4 +38,4 @@ const server = app.listen(process.env.PORT, () => {
 })
 
 const ConnectChat = require('./socketIO')
-ConnectChat(server)
+ConnectChat(server, config.client_url)

@@ -13,5 +13,6 @@ module.exports = {
   resetToken: process.env.RESET_TOKEN,
   cloudinaryName: 'aadarsh-staging',
   cloudinaryApiKey: '877179813848524',
-  cloudinaryApiSecret: 'YVaVbY85gm4S-ACoo1vLAh3j54Y'
+  cloudinaryApiSecret: 'YVaVbY85gm4S-ACoo1vLAh3j54Y',
+  client_url: process.env.CLIENT_URL
 }
