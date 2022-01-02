@@ -362,7 +362,7 @@ const forgotPassword = async (req, res) => {
                             <p style="color:#505050!important;">Dear ${name},</p>
                             <p style="color:#505050!important;">Please click this link below to reset your password:</p>
                             <p style="color:#505050!important;">
-                              <a href="${config.client_url}/reset-password/${resetToken}">Click Here</a>
+                              <a href="${config.client_url}/auth/reset-password/${resetToken}">Click Here</a>
                             </p>
                             <p style="color:#505050!important;">Note: This link is only available in 3 minutes !</p>
                             Best regards,<br>
@@ -396,7 +396,7 @@ const forgotPassword = async (req, res) => {
                                 <tr>
                                   <td width="25" style="font-size:1px;line-height:1px">&nbsp;</td>
                                   <td
-                                    style="font-family:'Proxima Nova',Calibri,Helvetica,sans-serif;font-size:12px;color:#808080;font-weight:normal;text-align:center;line-height:150%">
+                                    style="font-family:'Proxima Nova',Calibri,Helvetica,sans-serif;font-size:12px;color:#cda424;font-weight:normal;text-align:center;line-height:150%">
                                     <div>
                                       <em>© Copyright ${currentDate.getFullYear()} Aadarsharc<br>All rights reserved.</em>
                                     </div>

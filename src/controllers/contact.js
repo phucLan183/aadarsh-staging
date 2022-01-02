@@ -128,7 +128,7 @@ module.exports = async (req, res) => {
                                 <tr>
                                   <td width="25" style="font-size:1px;line-height:1px">&nbsp;</td>
                                   <td
-                                    style="font-family:'Proxima Nova',Calibri,Helvetica,sans-serif;font-size:12px;color:#808080;font-weight:normal;text-align:center;line-height:150%">
+                                    style="font-family:'Proxima Nova',Calibri,Helvetica,sans-serif;font-size:12px;color:#cda424;font-weight:normal;text-align:center;line-height:150%">
                                     <div>
                                       <em>© Copyright ${currentDate.getFullYear()} Aadarsharc<br>All rights reserved.</em>
                                     </div>
