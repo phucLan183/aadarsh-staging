@@ -10,7 +10,7 @@ const getAllProducts = async (req, res) => {
       name: { $regex: keyWord, $options: 'i' }
     }).populate({
       path: 'categoryId',
-      select: 'name'
+      select: 'name slug',
     }).sort({ _id: -1 }).skip(skipPage).limit(pageSize)
     const totalCategory = await ProductModel.countDocuments({
       name: { $regex: keyWord, $options: 'i' }

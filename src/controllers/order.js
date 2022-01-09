@@ -9,7 +9,11 @@ const getAllOrders = async (req, res) => {
     const pageSize = parseInt(req.query.pageSize) || 10
     const skipPage = page * pageSize - pageSize
     const keyWord = req.query?.keyWord || ''
-    const dataOrders = await OrderModel.find().populate({ path: 'productId', select: '-storage' }).sort({ _id: -1 }).skip(skipPage)
+    const dataOrders = await OrderModel.find().populate({
+      path: 'productId',
+      select: '-storage',
+      populate: { path: 'categoryId', select: 'name slug' },
+    }).sort({ _id: -1 }).skip(skipPage)
     const resultData = dataOrders.filter((item) => {
       let isInclude = false
       const allNameProducts = item.productId.map((product) => product.name.toLowerCase())
@@ -176,7 +180,11 @@ const getOrdersCurrentUser = async (req, res) => {
     const { userId } = req.user
     const dataOrders = await OrderModel.find({
       'createdBy.userId': userId,
-    }).populate({ path: 'productId', select: '-storage' }).sort({ _id: -1 }).skip(skipPage)
+    }).populate({
+      path: 'productId',
+      select: '-storage',
+      populate: { path: 'categoryId', select: 'name slug' },
+    }).sort({ _id: -1 }).skip(skipPage)
     const resultData = dataOrders.filter((item) => {
       let isInclude = false
       const allNameProducts = item.productId.map((product) => product.name.toLowerCase())

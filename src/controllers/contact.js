@@ -13,18 +13,19 @@ module.exports = async (req, res) => {
     const body = req.body
     const currentDate = new Date()
     const dataContact = {
+      from: 'Aadarsharc Bot <aadarsharc.bot@gmail.com>',
       to: sendToEmail,
-      subject: "Thư liên hệ của khách hàng",
-      html: `<div bgcolor="#F7F7F7">
-    <div style="background-color:#f7f7f7">
-      <table width="100%" bgcolor="#F7F7F7" cellpadding="0" cellspacing="0" border="0" style="text-align:center">
+      subject: "THÔNG TIN LIÊN HỆ CỦA KHÁCH HÀNG",
+      html: `<div bgcolor="#272a35">
+    <div style="background-color:#272a35">
+      <table width="100%" bgcolor="#272a35" cellpadding="0" cellspacing="0" border="0" style="text-align:center">
         <tbody>
           <tr>
             <td>
-              <table bgcolor="#F7F7F7" cellpadding="0" cellspacing="0" border="0" width="700" align="center"
+              <table bgcolor="#272a35" cellpadding="0" cellspacing="0" border="0" width="700" align="center"
                 style="margin:0px auto">
                 <tr>
-                  <td bgcolor="#F7F7F7" align="right" valign="top">
+                  <td bgcolor="#272a35" align="right" valign="top">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" align="right">
                       <tbody>
                         <tr>
@@ -61,7 +62,7 @@ module.exports = async (req, res) => {
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td bgcolor="#F7F7F7" height="40" style="font-size:1px;line-height:1px">&nbsp;</td>
+                                  <td bgcolor="#272a35" height="40" style="font-size:1px;line-height:1px">&nbsp;</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -84,8 +85,8 @@ module.exports = async (req, res) => {
                           <td width="41" style="font-size:1px;line-height:1px">&nbsp;</td>
                           <td
                             style="font-family:'Proxima Nova',Calibri,Helvetica,sans-serif;font-size:16px;color:#505050!important;text-align:left;line-height:25.6px;font-weight:normal;text-transform:none">
-                            <p style="color:#505050!important;">Hi Aadarsharc Team,</p>
-                            <p style="color:#505050!important;">${body.firstName} ${body.lastName} gửi thư liện hệ:</p>
+                            <p style="color:#505050!important;">Xin Chào Aadarsharc Team,</p>
+                            <p style="color:#505050!important;">${body.firstName} ${body.lastName} đã gửi thông tin liên hệ:</p>
                             <p style="color:#505050!important;">
                               <ul>
                                 <li>First Name: ${body.firstName}</li>
@@ -97,7 +98,7 @@ module.exports = async (req, res) => {
                             </p>Trân trọng,<br>
                             <b>Aadarsharc Team</b><br><br>
 
-                            <i>Email này do hệ thống tự động tạo. Xin đừng trả lời.</i>
+                            <i>Email này do hệ thống tự động gửi và sẽ không có phản hồi.</i>
                           <td width="41" style="font-size:1px;line-height:1px">&nbsp;</td>
 
                         </tr>
@@ -111,7 +112,7 @@ module.exports = async (req, res) => {
                   </td>
                 </tr>
                 <tr>
-                  <td bgcolor="#F7F7F7" align="center">
+                  <td bgcolor="#272a35" align="center">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
                       <tbody>
                         <tr>
@@ -127,10 +128,9 @@ module.exports = async (req, res) => {
                                 <tr>
                                   <td width="25" style="font-size:1px;line-height:1px">&nbsp;</td>
                                   <td
-                                    style="font-family:'Proxima Nova',Calibri,Helvetica,sans-serif;font-size:12px;color:#808080;font-weight:normal;text-align:center;line-height:150%">
+                                    style="font-family:'Proxima Nova',Calibri,Helvetica,sans-serif;font-size:12px;color:#cda424;font-weight:normal;text-align:center;line-height:150%">
                                     <div>
-                                      <em>© Copyright ${currentDate.getFullYear()} Aadarsharc Team Center<br>All rights
-                                        reserved.</em>
+                                      <em>© Copyright ${currentDate.getFullYear()} Aadarsharc<br>All rights reserved.</em>
                                     </div>
                                   </td>
                                   <td width="25" style="font-size:1px;line-height:1px">&nbsp;</td>
