@@ -43,7 +43,7 @@ const getRoomId = async (req, res) => {
     if (!dataRoom) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find room'
       })
     }
     res.status(200).json({
@@ -65,7 +65,7 @@ const deleteRoom = async (req, res) => {
     if (!dataRoom) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find room'
       })
     }
     res.status(200).json({

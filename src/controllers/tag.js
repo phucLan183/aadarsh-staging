@@ -46,7 +46,7 @@ const createTag = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'false',
-        message: 'Dữ liệu đã được sử dụng!'
+        message: 'Tag already exists'
       })
     }
     res.status(500).json({
@@ -65,7 +65,7 @@ const deleteTag = async (req, res) => {
     if (!checkDataTag) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data tag'
       })
     }
     res.status(200).json({

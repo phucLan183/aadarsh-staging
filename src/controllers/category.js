@@ -32,7 +32,7 @@ const getCategory = async (req, res) => {
     if (!dataCategory) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find category'
       })
     }
     res.status(200).json({
@@ -68,7 +68,7 @@ const createCategory = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên thể loại đã được sử dụng!'
+        message: 'Category already exists'
       })
     }
     res.status(500).json({
@@ -101,7 +101,7 @@ const updateCategory = async (req, res) => {
     if (!dataCategory) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find category'
       })
     }
     res.status(200).json({
@@ -112,7 +112,7 @@ const updateCategory = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên thể loại đã được sử dụng!'
+        message: 'Category already exists'
       })
     }
     res.status(500).json({
@@ -131,7 +131,7 @@ const deleteCategory = async (req, res) => {
     if (!dataCategory) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find category'
       })
     }
     res.status(200).json({

@@ -43,7 +43,7 @@ const getOneReview = async (req, res) => {
     if (!dataReview) {
       return res.status(400).json({
         status: 'false',
-        message: 'ReviewId not found'
+        message: 'Could not find data review'
       })
     }
 
@@ -109,7 +109,7 @@ const updateReview = async (req, res) => {
     if (!dataReview) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data review'
       })
     }
     res.status(200).json({
@@ -131,7 +131,7 @@ const deleteReview = async (req, res) => {
     if (!dataReview) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data review'
       })
     }
     res.status(200).json({

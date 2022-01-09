@@ -34,7 +34,7 @@ const authorization = (req, res, next, data) => {
   } else {
     res.status(403).json({
       status: 'false',
-      message: 'Tài khoản không có quyền!'
+      message: 'Your account is not allowed to access'
     })
   }
 }

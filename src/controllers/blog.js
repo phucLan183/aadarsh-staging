@@ -42,7 +42,7 @@ const getOneBlog = async (req, res) => {
     if (!dataBlog) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy bài viết'
+        message: 'This blog could not be found'
       })
     }
     res.status(200).json({
@@ -88,7 +88,7 @@ const createBlog = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tiêu đề đã được sử dụng!'
+        message: 'Title already exists'
       })
     }
     res.status(500).json({
@@ -123,7 +123,7 @@ const updateBlog = async (req, res) => {
     if (!dataBlog) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy bài viết'
+        message: 'This blog could not be found'
       })
     }
 
@@ -135,7 +135,7 @@ const updateBlog = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tiêu đề đã được sử dụng!'
+        message: 'Title already exists'
       })
     }
     res.status(500).json({
@@ -154,7 +154,7 @@ const deleteBlog = async (req, res) => {
     if (!dataBlog) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy bài viết'
+        message: 'This blog could not be found'
       })
     }
     res.status(200).json({

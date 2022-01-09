@@ -38,7 +38,7 @@ const getOneQuestion = async (req, res) => {
     if (!dataQuestion) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy câu hỏi'
+        message: 'Could not find data question'
       })
     }
     res.status(200).json({
@@ -95,7 +95,7 @@ const updateQuestion = async (req, res) => {
     if (!dataQuestion) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy câu hỏi'
+        message: 'Could not find data question'
       })
     }
     res.status(200).json({
@@ -119,7 +119,7 @@ const deleteQuestion = async (req, res) => {
     if (!dataQuestion) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy câu hỏi'
+        message: 'Could not find data question'
       })
     }
     res.status(200).json({

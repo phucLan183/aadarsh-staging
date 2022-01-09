@@ -53,7 +53,7 @@ const getOneUser = async (req, res) => {
     if (!dataUser) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data user'
       })
     }
 
@@ -121,7 +121,7 @@ const updateUser = async (req, res) => {
     if (!dataUserUpdate) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data user'
       })
     }
 
@@ -144,7 +144,7 @@ const removeUser = async (req, res) => {
     if (userIdToken === userId) {
       return res.status(403).json({
         status: 'false',
-        message: 'Không thể tự xóa tài khoản!'
+        message: 'You can not remove yourself'
       })
     }
     const delUser = await UserModel.deleteOne({
@@ -153,7 +153,7 @@ const removeUser = async (req, res) => {
     if (!delUser) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data user'
       })
     }
     res.status(200).json({

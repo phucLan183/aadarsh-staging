@@ -38,7 +38,7 @@ const getOneProduct = async (req, res) => {
     if (!dataProduct) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data product'
       })
     }
     res.status(200).json({
@@ -75,7 +75,7 @@ const createProduct = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên thể loại đã được sử dụng!'
+        message: 'Name product already exists'
       })
     }
     res.status(500).json({
@@ -109,7 +109,7 @@ const updateProduct = async (req, res) => {
     if (!dataProduct) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data product'
       })
     }
     res.status(200).json({
@@ -120,7 +120,7 @@ const updateProduct = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên thể loại đã được sử dụng!'
+        message: 'Name product already exists'
       })
     }
     res.status(500).json({
@@ -139,7 +139,7 @@ const deleteProduct = async (req, res) => {
     if (!dataProduct) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data product'
       })
     }
     res.status(200).json({

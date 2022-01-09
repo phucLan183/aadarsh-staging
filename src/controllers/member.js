@@ -68,7 +68,7 @@ const getOneMember = async (req, res) => {
     if (!dataMember) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find member'
       })
     }
 
@@ -107,7 +107,7 @@ const updateMember = async (req, res) => {
     if (!dataMemberUpdate) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find member'
       })
     }
 
@@ -125,13 +125,13 @@ const updateMember = async (req, res) => {
 const removeMember = async (req, res) => {
   try {
     const memberId = req.params.id
-    const delUser = await MemberModel.deleteOne({
+    const delUser = await MemberModel.findOneAndDelete({
       _id: memberId
     }).lean()
     if (!delUser) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find member'
       })
     }
     res.status(200).json({

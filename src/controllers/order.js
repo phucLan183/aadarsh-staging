@@ -40,7 +40,7 @@ const getOneOrder = async (req, res) => {
     if (!dataOrder) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find order'
       })
     }
     res.status(200).json({
@@ -57,14 +57,15 @@ const getOneOrder = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try {
+    let data
     const body = req.body
     const { userId, role } = req.user
     const selectData = 'username fullname'
     if (role === 'USER') {
-      var data = await UserModel.findById(userId).select(selectData).lean()
+      data = await UserModel.findById(userId).select(selectData).lean()
     }
     if (role === 'MEMBER') {
-      var data = await MemberModel.findById(userId).select(selectData).lean()
+      data = await MemberModel.findById(userId).select(selectData).lean()
     }
     const newOrder = new OrderModel({
       productId: body.productId,
@@ -91,12 +92,6 @@ const createOrder = async (req, res) => {
       data: dataOrder
     })
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({
-        status: 'false',
-        message: 'Tên thể loại đã được sử dụng!'
-      })
-    }
     res.status(500).json({
       status: 'false',
       message: error.message
@@ -134,7 +129,7 @@ const updateOrder = async (req, res) => {
     if (!dataOrder) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data order'
       })
     }
     res.status(200).json({
@@ -158,7 +153,7 @@ const deleteOrder = async (req, res) => {
     if (!dataOrder) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data order'
       })
     }
     res.status(200).json({
@@ -216,7 +211,7 @@ const getOneOrderCurrentUser = async (req, res) => {
     if (!dataOrder) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data order'
       })
     }
     res.status(200).json({
@@ -255,7 +250,7 @@ const updateOrderMember = async (req, res) => {
     if (!dataOrder) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data order'
       })
     }
     res.status(200).json({

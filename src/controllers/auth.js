@@ -25,12 +25,12 @@ const register = async (req, res) => {
     if (validationUsername) {
       return res.status(400).json({
         status: 'false',
-        message: `Username đã được sử dụng!`
+        message: `Username already exists`
       })
     } else if (validationEmail) {
       return res.status(400).json({
         status: 'false',
-        message: `Email đã được sử dụng!`
+        message: `Email already exists`
       })
     }
 
@@ -62,14 +62,14 @@ const userLogin = async (req, res) => {
     if (!checkDataUser) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+        message: 'Please check your username and password',
       })
     }
     const comparePass = await bcrypt.compare(password, checkDataUser.password)
     if (!comparePass) {
       return res.status(400).json({
         status: 'false',
-        message: 'Tên đăng nhập hoặc mật khẩu không đúng!',
+        message: 'Please check your username and password',
       })
     }
     const accessToken = jwt.sign({
@@ -124,14 +124,14 @@ const memberLogin = async (req, res) => {
     if (!checkDataMember) {
       return res.status(400).json({
         status: 'false',
-        message: 'Username or Password is incorrect. Please try again!',
+        message: 'Please check your username and password',
       })
     }
     const comparePass = await bcrypt.compare(password, checkDataMember.password)
     if (!comparePass) {
       return res.status(400).json({
         status: 'false',
-        message: 'Username or Password is incorrect. Please try again!',
+        message: 'Please check your username and password',
       })
     }
     const accessToken = jwt.sign({
@@ -276,11 +276,10 @@ const forgotPassword = async (req, res) => {
     if (!checkDataMember) {
       return res.status(400).json({
         status: 'false',
-        message: 'Email không tồn tại'
+        message: 'Your email has been unregistered'
       })
     }
     const name = checkDataMember.fullname
-    console.log(checkDataMember);
     const currentDate = new Date()
     const resetToken = jwt.sign({
       userId: checkDataMember._id,
@@ -433,7 +432,7 @@ const forgotPassword = async (req, res) => {
     }
     res.status(200).json({
       status: 'success',
-      resetToken: resetToken
+      message: 'You will receive an email shortly to reset your password'
     })
   } catch (error) {
     res.status(500).json({
@@ -458,7 +457,7 @@ const resetPassword = async (req, res) => {
     if (!checkDataMember) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy tài khoản này!'
+        message: 'Could not find your account'
       })
     }
     res.status(200).json({
@@ -526,7 +525,7 @@ const putCurrentUser = async (req, res) => {
       if (!dataUserUpdate) {
         return res.status(400).json({
           status: 'false',
-          message: 'Không tìm thấy dữ liệu!'
+          message: 'Could not find your account'
         })
       }
 
@@ -556,7 +555,7 @@ const putCurrentUser = async (req, res) => {
       if (!dataMemberUpdate) {
         return res.status(400).json({
           status: 'false',
-          message: 'Không tìm thấy dữ liệu!'
+          message: 'Could not find your account'
         })
       }
 

@@ -16,7 +16,7 @@ const validationEditPermission = async (req, res, next) => {
     } else {
       res.status(403).json({
         status: 'false',
-        message: 'Không thể tự cập nhật quyền!'
+        message: 'You can not change permissions'
       })
     }
   } else if (isAdmin) {
@@ -24,7 +24,7 @@ const validationEditPermission = async (req, res, next) => {
   } else {
     res.status(403).json({
       status: 'false',
-      message: 'Tài khoản không có quyền!'
+      message: 'Your account is not allowed to access'
     })
   }
 }

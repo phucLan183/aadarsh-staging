@@ -61,7 +61,7 @@ const getOneImage = async (req, res) => {
     if (!dataImage) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data image'
       })
     }
     res.status(200).json({
@@ -86,7 +86,7 @@ const updateImage = async (req, res) => {
     if (!checkDataImage) {
       return res.status(404).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data image'
       })
     }
 
@@ -128,7 +128,7 @@ const deleteImage = async (req, res) => {
     if (!checkDataImageAndDelete || !deleteImageInCloud) {
       return res.status(400).json({
         status: 'false',
-        message: 'Không tìm thấy dữ liệu!'
+        message: 'Could not find data image'
       })
     }
     res.status(200).json({

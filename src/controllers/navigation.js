@@ -41,7 +41,7 @@ const getNavigation = async (req, res) => {
       if (!dataCategory) {
         return res.status(404).json({
           status: 'false',
-          message: 'Không tìm thấy dữ liệu!'
+          message: 'Could not find category'
         })
       }
       res.status(200).json({
@@ -56,7 +56,7 @@ const getNavigation = async (req, res) => {
       if (!dataProduct) {
         return res.status(404).json({
           status: 'false',
-          message: 'Không tìm thấy dữ liệu!'
+          message: 'Could not find product'
         })
       }
       res.status(200).json({
