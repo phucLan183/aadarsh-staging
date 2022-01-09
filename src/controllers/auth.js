@@ -458,11 +458,7 @@ const resetPassword = async (req, res) => {
     if (!checkDataMember) {
       return res.status(400).json({
         status: 'false',
-<<<<<<< HEAD
         message: 'Could not find your account'
-=======
-        message: 'Not found any account'
->>>>>>> b3050a366bab15775198146d32925f7288fcd49b
       })
     }
     res.status(200).json({
