@@ -1,9 +1,10 @@
 const nodemailer = require('nodemailer');
+const { userGmail, passGmail } = require('../config')
 const mail = {
   service: 'gmail',
   auth: {
-    user: "aadarsharc.bot@gmail.com",
-    pass: "Thang@1314"
+    user: userGmail,
+    pass: passGmail
   },
   tls: {
     rejectUnauthorized: false

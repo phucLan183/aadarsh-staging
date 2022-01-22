@@ -30,14 +30,23 @@ const getAllImages = async (req, res) => {
 
 const createImage = async (req, res) => {
   try {
-    const image = req.file.path
+    const file = req.file.path
     const folder = req.query.folder
-    const uploadImageIntoCloud = await cloudinary.uploader.upload(image, {
-      folder: folder
-    })
+    const type = req.query.type
+    let uploadToCloud
+    if (type === 'image') {
+      uploadToCloud = await cloudinary.uploader.upload(file, {
+        folder: folder
+      })
+    } else if (type === 'video') {
+      uploadToCloud = await cloudinary.uploader.upload(file, {
+        resource_type: "video",
+        folder: folder
+      })
+    }
     const dataImage = new ImageModel({
-      urlImage: uploadImageIntoCloud.secure_url,
-      publicIdImage: uploadImageIntoCloud.public_id,
+      urlImage: uploadToCloud.secure_url,
+      publicIdImage: uploadToCloud.public_id,
       folder: folder
     })
     const saveData = await dataImage.save()
@@ -121,11 +130,19 @@ const updateImage = async (req, res) => {
 const deleteImage = async (req, res) => {
   try {
     const imageId = req.params.id
+    const type = req.query.type
     const checkDataImageAndDelete = await ImageModel.findByIdAndDelete({
       _id: imageId
     }, { new: true })
-    const deleteImageInCloud = await cloudinary.uploader.destroy(checkDataImageAndDelete.publicIdImage)
-    if (!checkDataImageAndDelete || !deleteImageInCloud) {
+    let deleteFileInCloud
+    if (type === 'image') {
+      deleteFileInCloud = await cloudinary.uploader.destroy(checkDataImageAndDelete.publicIdImage)
+    } else if (type === 'video') {
+      deleteFileInCloud = await cloudinary.uploader.destroy(checkDataImageAndDelete.publicIdImage, {
+        resource_type: 'video'
+      })
+    }
+    if (!checkDataImageAndDelete || !deleteFileInCloud) {
       return res.status(400).json({
         status: 'false',
         message: 'Could not find data image'
@@ -146,6 +163,5 @@ module.exports = {
   getAllImages: getAllImages,
   createImage: createImage,
   getOneImage: getOneImage,
-  updateImage: updateImage,
   deleteImage: deleteImage
 }

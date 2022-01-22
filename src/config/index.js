@@ -14,5 +14,7 @@ module.exports = {
   cloudinaryName: process.env.CLOUDINARY_NAME,
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
-  client_url: process.env.CLIENT_URL
+  clientUrl: process.env.CLIENT_URL,
+  userGmail: process.env.USER_GMAIL,
+  passGmail: process.env.PASS_GMAIL,
 }
